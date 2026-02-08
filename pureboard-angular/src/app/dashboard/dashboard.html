@@ -23,10 +23,10 @@
   }
 
   @if (listeCards && listeCards.size > 0) {
-    <div class="flex flex-row">
+    <div class="flex flex-row flex-wrap">
       @for (card of listeCards | keyvalue; track card.key) {
 
-        <div class="mb-4 p-8">
+        <div class="mb-4 p-4 min-w-72 max-w-72">
           <p-card [header]="card.value.titre">
             <p class="m-0">
               @if (!card.value.nonCalcule) {

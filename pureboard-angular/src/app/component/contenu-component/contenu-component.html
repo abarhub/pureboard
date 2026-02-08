@@ -6,7 +6,7 @@
     @let tableau = contenu2.tableau;
     @if (tableau && tableau.lignes && tableau.lignes.length > 0) {
     <div class="card">
-      <p-table [value]="tableau.lignes" [tableStyle]="{ 'min-width': '50rem' }">
+      <p-table [value]="tableau.lignes" [size]="'small'">
         <ng-template #body let-ligne>
 
           <tr>
