@@ -6,13 +6,17 @@ import {Card} from '../entity/card';
 import {KeyValuePipe} from '@angular/common';
 import {TypeContenuDto} from '../entity/type-contenu-dto';
 import {ContenuComponent} from '../component/contenu-component/contenu-component';
+import {Select} from 'primeng/select';
+import {Button} from 'primeng/button';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     ReactiveFormsModule,
     KeyValuePipe,
-    ContenuComponent
+    ContenuComponent,
+    Select,
+    Button
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',

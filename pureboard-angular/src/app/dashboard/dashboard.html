@@ -11,7 +11,19 @@
       }
     </select>
   </label>
-  <button class="btn btn-primary" (click)="selection($event)">OK</button>
+
+  <p-select
+    formControlName="dashboard"
+    [options]="dashboards"
+    optionLabel="titre"
+    optionValue="id"
+    class="w-full"
+    placeholder="Sélectionner un dashboard"
+  >
+  </p-select>
+
+  <p-button label="OK" (click)="selection($event)"/>
+<!--  <button class="btn btn-primary" (click)="selection($event)">OK</button>-->
 
   @if(chargementCards()) {
     <div class="spinner-border text-primary" role="status">
