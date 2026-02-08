@@ -1,17 +1,6 @@
 <form [formGroup]="selectionDashboard" (ngSubmit)="onSubmit()">
 
   <div class="flex items-center justify-center gap-4">
-<!--  <label>-->
-<!--    Dashboard :-->
-<!--    <select formControlName="dashboard" class="form-select">-->
-<!--      <option value="">&#45;&#45; Sélectionner un dashboard &#45;&#45;</option>-->
-<!--      @for (dashboard of dashboards; track dashboard.id) {-->
-<!--        <option [value]="dashboard.id">-->
-<!--          {{ dashboard.titre }}-->
-<!--        </option>-->
-<!--      }-->
-<!--    </select>-->
-<!--  </label>-->
 
   <p-select
     formControlName="dashboard"
@@ -24,13 +13,12 @@
   </p-select>
 
   <p-button label="OK" (click)="selection($event)"/>
-<!--  <button class="btn btn-primary" (click)="selection($event)">OK</button>-->
 
   </div>
 
   @if(chargementCards()) {
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Chargement...</span>
+    <div class="card flex justify-center">
+      <p-progress-spinner ariaLabel="loading" />
     </div>
   }
 
@@ -46,26 +34,14 @@
                 @if (value.contenu) {
                   <app-contenu-component [contenu]="value.contenu" class="no-padding"></app-contenu-component>
                 }
+              } @else {
+                <div class="card flex justify-center">
+                  <p-progress-spinner ariaLabel="loading" />
+                </div>
               }
             </p>
           </p-card>
         </div>
-
-<!--        <div class="card" style="width: 18rem;min-width: 18rem;">-->
-<!--          <div class="card-body">-->
-<!--            <h5 class="card-title">{{ card.value.titre }}</h5>-->
-<!--&lt;!&ndash;            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s&ndash;&gt;-->
-<!--&lt;!&ndash;              content.</p>&ndash;&gt;-->
-<!--&lt;!&ndash;            <a href="#" class="btn btn-primary">Go somewhere</a>&ndash;&gt;-->
-<!--            @if (!card.value.nonCalcule) {-->
-<!--              @let value = card.value;-->
-<!--              @if (value.contenu) {-->
-<!--                <app-contenu-component [contenu]="value.contenu" class="no-padding"></app-contenu-component>-->
-<!--              }-->
-<!--            }-->
-<!--          </div>-->
-<!--        </div>-->
-
 
       }
     </div>

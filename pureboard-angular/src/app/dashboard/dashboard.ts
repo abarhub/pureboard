@@ -9,6 +9,7 @@ import {ContenuComponent} from '../component/contenu-component/contenu-component
 import {Select} from 'primeng/select';
 import {Button} from 'primeng/button';
 import {Card} from 'primeng/card';
+import {ProgressSpinner} from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,8 @@ import {Card} from 'primeng/card';
     ContenuComponent,
     Select,
     Button,
-    Card
+    Card,
+    ProgressSpinner
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
