@@ -1,4 +1,4 @@
-package org.pureboard.pureboard;
+package org.pureboard;
 
 import org.pureboard.properties.AppProperties;
 import org.springframework.boot.SpringApplication;

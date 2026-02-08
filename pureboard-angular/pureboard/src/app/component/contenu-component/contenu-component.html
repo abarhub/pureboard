@@ -1,0 +1,26 @@
+@let contenu2 = contenu();
+@if (contenu2) {
+  @if (contenu2.type == TypeContenuDto.TEXTE) {
+    <p class="card-text">{{ contenu2.texte }}</p>
+  } @else if (contenu2.type == TypeContenuDto.TABLEAU) {
+    <table class="table table-striped table-hover">
+      @let tableau = contenu2.tableau;
+      @if (tableau && tableau.lignes && tableau.lignes.length > 0) {
+        <tbody class="table-group-divider">
+          @for (ligne of tableau.lignes; track $index) {
+            <tr>
+              @for (cellule of ligne; track $index) {
+                <td>
+                  @if (cellule) {
+                    <app-contenu-component [contenu]="cellule" class="no-padding"></app-contenu-component>
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      }
+    </table>
+
+  }
+}

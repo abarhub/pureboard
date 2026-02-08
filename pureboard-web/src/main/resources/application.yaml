@@ -38,7 +38,7 @@ app:
           repertoire: .
         -
           type: groovy
-          script: puredash-web/src/main/resources/groovy/test1.groovy
+          script: pureboard-web/src/main/resources/groovy/test1.groovy
         -
           type: groovy
-          script: puredash-web/src/main/resources/groovy/test2.groovy
+          script: pureboard-web/src/main/resources/groovy/test2.groovy

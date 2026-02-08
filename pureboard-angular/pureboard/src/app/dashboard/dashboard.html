@@ -1,0 +1,45 @@
+<form [formGroup]="selectionDashboard" (ngSubmit)="onSubmit()">
+
+  <label>
+    Dashboard :
+    <select formControlName="dashboard" class="form-select">
+      <option value="">-- Sélectionner un dashboard --</option>
+      @for (dashboard of dashboards; track dashboard.id) {
+        <option [value]="dashboard.id">
+          {{ dashboard.titre }}
+        </option>
+      }
+    </select>
+  </label>
+  <button class="btn btn-primary" (click)="selection($event)">OK</button>
+
+  @if(chargementCards()) {
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  }
+
+  @if (listeCards && listeCards.size > 0) {
+    <div class="d-flex flex-row flex-wrap">
+      @for (card of listeCards | keyvalue; track card.key) {
+        <div class="card" style="width: 18rem;min-width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">{{ card.value.titre }}</h5>
+<!--            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s-->
+<!--              content.</p>-->
+<!--            <a href="#" class="btn btn-primary">Go somewhere</a>-->
+            @if (!card.value.nonCalcule) {
+              @let value = card.value;
+              @if (value.contenu) {
+                <app-contenu-component [contenu]="value.contenu" class="no-padding"></app-contenu-component>
+              }
+            }
+          </div>
+        </div>
+
+
+      }
+    </div>
+  }
+
+</form>
