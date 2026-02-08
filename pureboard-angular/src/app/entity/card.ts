@@ -1,6 +1,6 @@
 import {ContenuDto} from './contenu-dto';
 
-export class Card {
+export class CardEntity {
   id: string = '';
   nonCalcule: boolean = true;
   titre: string = '';

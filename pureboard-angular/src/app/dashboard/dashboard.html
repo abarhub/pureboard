@@ -1,29 +1,32 @@
 <form [formGroup]="selectionDashboard" (ngSubmit)="onSubmit()">
 
-  <label>
-    Dashboard :
-    <select formControlName="dashboard" class="form-select">
-      <option value="">-- Sélectionner un dashboard --</option>
-      @for (dashboard of dashboards; track dashboard.id) {
-        <option [value]="dashboard.id">
-          {{ dashboard.titre }}
-        </option>
-      }
-    </select>
-  </label>
+  <div class="flex items-center justify-center gap-4">
+<!--  <label>-->
+<!--    Dashboard :-->
+<!--    <select formControlName="dashboard" class="form-select">-->
+<!--      <option value="">&#45;&#45; Sélectionner un dashboard &#45;&#45;</option>-->
+<!--      @for (dashboard of dashboards; track dashboard.id) {-->
+<!--        <option [value]="dashboard.id">-->
+<!--          {{ dashboard.titre }}-->
+<!--        </option>-->
+<!--      }-->
+<!--    </select>-->
+<!--  </label>-->
 
   <p-select
     formControlName="dashboard"
     [options]="dashboards"
     optionLabel="titre"
     optionValue="id"
-    class="w-full"
+    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
     placeholder="Sélectionner un dashboard"
   >
   </p-select>
 
   <p-button label="OK" (click)="selection($event)"/>
 <!--  <button class="btn btn-primary" (click)="selection($event)">OK</button>-->
+
+  </div>
 
   @if(chargementCards()) {
     <div class="spinner-border text-primary" role="status">
@@ -32,22 +35,36 @@
   }
 
   @if (listeCards && listeCards.size > 0) {
-    <div class="d-flex flex-row flex-wrap">
+    <div class="flex flex-row">
       @for (card of listeCards | keyvalue; track card.key) {
-        <div class="card" style="width: 18rem;min-width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">{{ card.value.titre }}</h5>
-<!--            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s-->
-<!--              content.</p>-->
-<!--            <a href="#" class="btn btn-primary">Go somewhere</a>-->
-            @if (!card.value.nonCalcule) {
-              @let value = card.value;
-              @if (value.contenu) {
-                <app-contenu-component [contenu]="value.contenu" class="no-padding"></app-contenu-component>
+
+        <div class="mb-4 p-8">
+          <p-card [header]="card.value.titre">
+            <p class="m-0">
+              @if (!card.value.nonCalcule) {
+                @let value = card.value;
+                @if (value.contenu) {
+                  <app-contenu-component [contenu]="value.contenu" class="no-padding"></app-contenu-component>
+                }
               }
-            }
-          </div>
+            </p>
+          </p-card>
         </div>
+
+<!--        <div class="card" style="width: 18rem;min-width: 18rem;">-->
+<!--          <div class="card-body">-->
+<!--            <h5 class="card-title">{{ card.value.titre }}</h5>-->
+<!--&lt;!&ndash;            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s&ndash;&gt;-->
+<!--&lt;!&ndash;              content.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <a href="#" class="btn btn-primary">Go somewhere</a>&ndash;&gt;-->
+<!--            @if (!card.value.nonCalcule) {-->
+<!--              @let value = card.value;-->
+<!--              @if (value.contenu) {-->
+<!--                <app-contenu-component [contenu]="value.contenu" class="no-padding"></app-contenu-component>-->
+<!--              }-->
+<!--            }-->
+<!--          </div>-->
+<!--        </div>-->
 
 
       }

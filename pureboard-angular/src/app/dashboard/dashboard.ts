@@ -2,12 +2,13 @@ import {Component, OnInit, signal} from '@angular/core';
 import {DataService} from '../service/data-service';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {DashboardDto} from '../entity/dashboard';
-import {Card} from '../entity/card';
+import {CardEntity} from '../entity/card';
 import {KeyValuePipe} from '@angular/common';
 import {TypeContenuDto} from '../entity/type-contenu-dto';
 import {ContenuComponent} from '../component/contenu-component/contenu-component';
 import {Select} from 'primeng/select';
 import {Button} from 'primeng/button';
+import {Card} from 'primeng/card';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +17,8 @@ import {Button} from 'primeng/button';
     KeyValuePipe,
     ContenuComponent,
     Select,
-    Button
+    Button,
+    Card
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -25,7 +27,7 @@ export class Dashboard implements OnInit {
 
   dashboards: DashboardDto[] = [];
   selectionDashboard!: FormGroup;
-  listeCards: Map<string, Card> = new Map();
+  listeCards: Map<string, CardEntity> = new Map();
   chargementCards = signal(false);
 
   constructor(private dataService: DataService, private fb: FormBuilder) {
@@ -59,7 +61,7 @@ export class Dashboard implements OnInit {
     this.dataService.getListCard(idDashboard).subscribe(data => {
       console.log('liste card', data);
       for (const card of data) {
-        let cardObj = new Card();
+        let cardObj = new CardEntity();
         cardObj.id = card.id;
         cardObj.nonCalcule = true;
         cardObj.titre = card.label;
