@@ -1,4 +1,4 @@
-package org.pureboard.pureboard.dto;
+package org.pureboard.dto;
 
 public enum TypeContenu {
     TEXTE, TABLEAU

@@ -1,15 +1,15 @@
-package org.pureboard.pureboard.service;
+package org.pureboard.service;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.pureboard.pureboard.dashboard.Card;
-import org.pureboard.pureboard.dashboard.Dashboard;
-import org.pureboard.pureboard.dashboard.ListeDashboard;
-import org.pureboard.pureboard.dashboard.TypeDashboard;
-import org.pureboard.pureboard.dto.CardDto;
-import org.pureboard.pureboard.dto.DashboardDto;
-import org.pureboard.pureboard.dto.LabelDto;
-import org.pureboard.pureboard.properties.AppProperties;
-import org.pureboard.pureboard.properties.DashboardProperties;
+import org.pureboard.dashboard.Card;
+import org.pureboard.dashboard.Dashboard;
+import org.pureboard.dashboard.ListeDashboard;
+import org.pureboard.dashboard.TypeDashboard;
+import org.pureboard.dto.CardDto;
+import org.pureboard.dto.DashboardDto;
+import org.pureboard.dto.LabelDto;
+import org.pureboard.properties.AppProperties;
+import org.pureboard.properties.DashboardProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

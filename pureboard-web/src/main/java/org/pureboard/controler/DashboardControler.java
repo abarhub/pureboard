@@ -1,10 +1,10 @@
-package org.pureboard.pureboard.controler;
+package org.pureboard.controler;
 
-import org.pureboard.pureboard.dto.CardDto;
-import org.pureboard.pureboard.dto.DashboardDto;
-import org.pureboard.pureboard.dto.LabelDto;
-import org.pureboard.pureboard.service.CardService;
-import org.pureboard.pureboard.service.DashboardService;
+import org.pureboard.dto.CardDto;
+import org.pureboard.dto.DashboardDto;
+import org.pureboard.dto.LabelDto;
+import org.pureboard.service.CardService;
+import org.pureboard.service.DashboardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;

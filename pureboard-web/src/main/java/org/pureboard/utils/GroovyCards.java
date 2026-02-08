@@ -1,4 +1,4 @@
-package org.pureboard.pureboard.utils;
+package org.pureboard.utils;
 
 import java.util.List;
 

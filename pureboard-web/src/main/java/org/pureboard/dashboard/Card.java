@@ -1,8 +1,8 @@
-package org.pureboard.pureboard.dashboard;
+package org.pureboard.dashboard;
 
 import lombok.Data;
-import org.pureboard.pureboard.properties.CardProperties;
-import org.pureboard.pureboard.vo.Projet;
+import org.pureboard.properties.CardProperties;
+import org.pureboard.vo.Projet;
 
 import java.nio.file.Path;
 

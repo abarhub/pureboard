@@ -1,4 +1,4 @@
-package org.pureboard.pureboard.dto;
+package org.pureboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

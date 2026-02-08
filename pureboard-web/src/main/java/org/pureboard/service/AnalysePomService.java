@@ -1,4 +1,4 @@
-package org.pureboard.pureboard.service;
+package org.pureboard.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.model.Model;
@@ -13,7 +13,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.pureboard.pureboard.vo.*;
+import org.pureboard.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

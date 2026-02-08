@@ -1,4 +1,4 @@
-package org.pureboard.pureboard.dashboard;
+package org.pureboard.dashboard;
 
 public enum TypeCard {
     MAVEN

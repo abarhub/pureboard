@@ -1,6 +1,6 @@
 package org.pureboard.pureboard;
 
-import org.pureboard.pureboard.properties.AppProperties;
+import org.pureboard.properties.AppProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

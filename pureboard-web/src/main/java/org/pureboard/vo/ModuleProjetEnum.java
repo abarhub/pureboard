@@ -1,4 +1,4 @@
-package org.pureboard.pureboard.vo;
+package org.pureboard.vo;
 
 public enum ModuleProjetEnum {
     POM,

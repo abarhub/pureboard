@@ -1,4 +1,4 @@
-package org.pureboard.pureboard.vo;
+package org.pureboard.vo;
 
 import java.time.LocalDateTime;
 import java.util.Set;

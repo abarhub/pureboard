@@ -1,8 +1,8 @@
-package org.pureboard.pureboard.service;
+package org.pureboard.service;
 
 
-import org.pureboard.pureboard.vo.ModuleProjetEnum;
-import org.pureboard.pureboard.vo.Projet;
+import org.pureboard.vo.ModuleProjetEnum;
+import org.pureboard.vo.Projet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

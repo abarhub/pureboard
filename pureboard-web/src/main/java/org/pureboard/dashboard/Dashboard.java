@@ -1,7 +1,7 @@
-package org.pureboard.pureboard.dashboard;
+package org.pureboard.dashboard;
 
 import lombok.Data;
-import org.pureboard.pureboard.properties.DashboardProperties;
+import org.pureboard.properties.DashboardProperties;
 
 import java.util.List;
 

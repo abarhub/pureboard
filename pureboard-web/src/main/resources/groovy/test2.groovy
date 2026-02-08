@@ -1,4 +1,4 @@
-import org.pureboard.pureboard.utils.GroovyCards
+import org.pureboard.utils.GroovyCards
 
 
 class MonScript2 implements GroovyCards {
