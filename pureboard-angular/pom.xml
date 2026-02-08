@@ -10,9 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.pureboard</groupId>
     <artifactId>pureboard-angular</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
-    
+
 </project>

@@ -10,9 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.pureboard</groupId>
-    <artifactId>pureboard-web</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+	<artifactId>pureboard-web</artifactId>
 
 	<properties>
 		<spring-modulith.version>2.0.1</spring-modulith.version>
