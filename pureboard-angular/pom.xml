@@ -12,5 +12,51 @@
 
     <artifactId>pureboard-angular</artifactId>
 
+    <properties>
+        <frontend-maven-plugin.version>2.0.0</frontend-maven-plugin.version>
+        <frontend-maven-plugin.nodeVersion>v24.12.0</frontend-maven-plugin.nodeVersion>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>${frontend-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nodeVersion>${frontend-maven-plugin.nodeVersion}</nodeVersion>
+                    <workingDirectory>pureboard</workingDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
