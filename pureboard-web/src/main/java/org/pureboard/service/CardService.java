@@ -78,8 +78,15 @@ public class CardService {
             Object groovyObject = groovyClass.getDeclaredConstructor().newInstance();
 
             if (groovyObject instanceof GroovyCards groovyCards) {
-                var tmp=groovyCards.listeCard();
-                LOGGER.info("listeCard: {}", tmp);
+                var listeCard = groovyCards.getListCard(cardProperties);
+                LOGGER.info("listeCard: {}", listeCard);
+                if(listeCard!=null) {
+                    listeCard.forEach(x -> {
+                        x.setObjectGroovy(groovyCards);
+                        x.setType(TypeCard.GROOVY);
+                    });
+                    listeCards.addAll(listeCard);
+                }
             } else {
                 Method m = groovyClass.getMethod("direBonjour", String.class);
                 String resultat = (String) m.invoke(groovyObject, "Alice");
@@ -92,26 +99,30 @@ public class CardService {
 
     private void construitListeCardMaven(List<Card> listeCards, CardProperties cardProperties) {
 
-        if (StringUtils.isNotBlank(cardProperties.getRepertoire())) {
-            Path repertoire = Path.of(cardProperties.getRepertoire());
-            try {
-                List<Projet> listeProjets = rechercheRepertoireService.findPomFiles(repertoire, Collections.EMPTY_SET);
-                for (var projet : listeProjets) {
-                    if (projet.getFichierPom() != null) {
-                        Card card = new Card();
-                        card.setId("card" + counter.getAndIncrement());
-                        card.setTitre("Projet " + projet.getNom());
-                        card.setType(TypeCard.MAVEN);
-                        card.setCardProperties(cardProperties);
-                        Assert.notNull(projet, "projet null");
-                        card.setPomMaven(Path.of(projet.getFichierPom()));
-                        card.setProjet(projet);
+        if (CollectionUtils.isNotEmpty(cardProperties.getRepertoire())) {
+            for (String repertoire0 : cardProperties.getRepertoire()) {
+                Path repertoire = Path.of(repertoire0);
+                if(Files.exists(repertoire)) {
+                    try {
+                        List<Projet> listeProjets = rechercheRepertoireService.findPomFiles(repertoire, Collections.EMPTY_SET);
+                        for (var projet : listeProjets) {
+                            if (projet.getFichierPom() != null) {
+                                Card card = new Card();
+                                card.setId("card" + counter.getAndIncrement());
+                                card.setTitre("Projet " + projet.getNom());
+                                card.setType(TypeCard.MAVEN);
+                                card.setCardProperties(cardProperties);
+                                Assert.notNull(projet, "projet null");
+                                card.setPomMaven(Path.of(projet.getFichierPom()));
+                                card.setProjet(projet);
 
-                        listeCards.add(card);
+                                listeCards.add(card);
+                            }
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("Erreur lors de la recherche des projets Maven pour le répertoire {}", repertoire, e);
                     }
                 }
-            } catch (Exception e) {
-                LOGGER.error("Erreur lors de la recherche des projets Maven", e);
             }
         }
     }
@@ -121,8 +132,17 @@ public class CardService {
         cardDto.setId(idCard);
         if (card.getType() == TypeCard.MAVEN) {
             calculCardMaven(card, cardDto);
+        } else if (card.getType()==TypeCard.GROOVY) {
+            calculCardGroovy(card, cardDto);
         }
         return cardDto;
+    }
+
+    private void calculCardGroovy(Card card, CardDto cardDto) {
+        if(card.getObjectGroovy()!=null){
+            var groovyCards = card.getObjectGroovy();
+            groovyCards.getCard(card, cardDto);
+        }
     }
 
     private void calculCardMaven(Card card, CardDto cardDto) {

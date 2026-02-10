@@ -5,40 +5,46 @@ spring:
 
 app:
   dashboards:
+#    -
+#      titre: Dashboard 1
+#      type: card
+#      listeCard:
+#        -
+#          type: maven
+#          champs:
+#            -
+#              expression: projetPom?.nom
+#            -
+#              expression: projetPom?.artifact.groupId
+#            -
+#              expression: projetPom?.artifact.artefactId
+#            -
+#              expression: projetPom?.artifact.version
+#            -
+#              nom: java version
+#              expression: projetPom?.properties?.['java.version']
+#            -
+#              nom: parent artifact
+#              expression: projetPom?.parent?.artefactId
+#            -
+#              nom: parent version
+#              expression: projetPom?.parent?.version
+#            -
+#              nom: version angular
+#              expression: projetNode?.dependencies?.['@angular/core']
+#            -
+#              nom: dernier commit
+#              expression: projetGit?.idCommit
+#          repertoire: .
+#        -
+#          type: groovy
+#          script: pureboard-web/src/main/resources/groovy/test1.groovy
+#        -
+#          type: groovy
+#          script: pureboard-web/src/main/resources/groovy/test2.groovy
     -
-      titre: Dashboard 1
+      titre: Dashboard 2
       type: card
       listeCard:
-        -
-          type: maven
-          champs:
-            -
-              expression: projetPom?.nom
-            -
-              expression: projetPom?.artifact.groupId
-            -
-              expression: projetPom?.artifact.artefactId
-            -
-              expression: projetPom?.artifact.version
-            -
-              nom: java version
-              expression: projetPom?.properties?.['java.version']
-            -
-              nom: parent artifact
-              expression: projetPom?.parent?.artefactId
-            -
-              nom: parent version
-              expression: projetPom?.parent?.version
-            -
-              nom: version angular
-              expression: projetNode?.dependencies?.['@angular/core']
-            -
-              nom: dernier commit
-              expression: projetGit?.idCommit
-          repertoire: .
-        -
-          type: groovy
-          script: pureboard-web/src/main/resources/groovy/test1.groovy
-        -
-          type: groovy
+        - type: groovy
           script: pureboard-web/src/main/resources/groovy/test2.groovy

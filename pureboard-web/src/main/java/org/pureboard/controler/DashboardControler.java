@@ -30,10 +30,7 @@ public class DashboardControler {
     }
 
     @GetMapping(path = "/liste-dashboard", produces = "application/json")
-    public List<DashboardDto> listeDashboard(/*@PathVariable String groupId,
-                                       @PathVariable String nomProjet,
-                                       @RequestParam String commitInitial,
-                                       @RequestParam String commitFinal*/) throws Exception {
+    public List<DashboardDto> listeDashboard() throws Exception {
         LOGGER.info("listeDashboard");
         return dashboardService.getListeDashboardDto();
     }

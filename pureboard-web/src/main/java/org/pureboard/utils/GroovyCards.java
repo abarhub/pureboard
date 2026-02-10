@@ -1,11 +1,15 @@
 package org.pureboard.utils;
 
+import org.pureboard.dashboard.Card;
+import org.pureboard.dto.CardDto;
+import org.pureboard.properties.CardProperties;
+
 import java.util.List;
 
 public interface GroovyCards {
 
-    List<String> listeCard();
+    List<Card> getListCard(CardProperties cardProperties);
 
-    void getCard(String param);
+    void getCard(Card card, CardDto cardDto);
 
 }
