@@ -78,11 +78,11 @@ export class Dashboard implements OnInit {
     for (const card of this.listeCards.values()) {
       this.dataService.getCard(idDashboard, card.id).subscribe(data => {
         if (data && data.contenu) {
-          console.log('card', card.id, data.contenu);
+          // console.log('card', card.id, data.contenu);
           card.contenu = data.contenu;
-          card.nonCalcule = false;
-          console.log('card2', card);
+          // console.log('card2', card);
         }
+        card.nonCalcule = false;
       });
     }
   }

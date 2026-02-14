@@ -1,5 +1,5 @@
 package org.pureboard.dto;
 
 public enum TypeContenu {
-    TEXTE, TABLEAU
+    TEXTE, TABLEAU, ICONE, COMPOSE, LIEN, BOUTON
 }

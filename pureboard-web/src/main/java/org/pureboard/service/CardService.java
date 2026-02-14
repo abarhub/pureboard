@@ -26,6 +26,8 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,7 +82,7 @@ public class CardService {
             if (groovyObject instanceof GroovyCards groovyCards) {
                 var listeCard = groovyCards.getListCard(cardProperties);
                 LOGGER.info("listeCard: {}", listeCard);
-                if(listeCard!=null) {
+                if (listeCard != null) {
                     listeCard.forEach(x -> {
                         x.setObjectGroovy(groovyCards);
                         x.setType(TypeCard.GROOVY);
@@ -102,7 +104,7 @@ public class CardService {
         if (CollectionUtils.isNotEmpty(cardProperties.getRepertoire())) {
             for (String repertoire0 : cardProperties.getRepertoire()) {
                 Path repertoire = Path.of(repertoire0);
-                if(Files.exists(repertoire)) {
+                if (Files.exists(repertoire)) {
                     try {
                         List<Projet> listeProjets = rechercheRepertoireService.findPomFiles(repertoire, Collections.EMPTY_SET);
                         for (var projet : listeProjets) {
@@ -132,16 +134,19 @@ public class CardService {
         cardDto.setId(idCard);
         if (card.getType() == TypeCard.MAVEN) {
             calculCardMaven(card, cardDto);
-        } else if (card.getType()==TypeCard.GROOVY) {
+        } else if (card.getType() == TypeCard.GROOVY) {
             calculCardGroovy(card, cardDto);
         }
         return cardDto;
     }
 
     private void calculCardGroovy(Card card, CardDto cardDto) {
-        if(card.getObjectGroovy()!=null){
+        if (card.getObjectGroovy() != null) {
             var groovyCards = card.getObjectGroovy();
+            Instant date = Instant.now();
+            LOGGER.info("appel script groovy {} ...", card.getId());
             groovyCards.getCard(card, cardDto);
+            LOGGER.info("appel script groovy {} fini (duree:{})", card.getId(), Duration.between(date, Instant.now()));
         }
     }
 

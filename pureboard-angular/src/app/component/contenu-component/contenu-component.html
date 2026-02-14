@@ -1,28 +1,66 @@
 @let contenu2 = contenu();
 @if (contenu2) {
-  @if (contenu2.type == TypeContenuDto.TEXTE) {
-    <p>{{ contenu2.texte }}</p>
-  } @else if (contenu2.type == TypeContenuDto.TABLEAU) {
-    @let tableau = contenu2.tableau;
-    @if (tableau && tableau.lignes && tableau.lignes.length > 0) {
-    <div class="card">
-      <p-table [value]="tableau.lignes" [size]="'small'">
-        <ng-template #body let-ligne>
+  @switch (contenu2.type) {
+    @case (TypeContenuDto.TEXTE) {
+      <p>{{ contenu2.texte }}</p>
+    }
+    @case (TypeContenuDto.TABLEAU) {
+      @let tableau = contenu2.tableau;
+      @if (tableau && tableau?.lignes?.length) {
+        <div class="card">
+          <p-table [value]="tableau.lignes" [size]="'small'">
+            <ng-template #body let-ligne>
 
-          <tr>
-            @for (cellule of ligne; track $index) {
-              <td>
-                @if (cellule) {
-                  <app-contenu-component [contenu]="cellule" class="no-padding"></app-contenu-component>
+              <tr>
+                @for (cellule of ligne; track $index) {
+                  <td>
+                    @if (cellule) {
+                      <app-contenu-component [contenu]="cellule" class="no-padding"></app-contenu-component>
+                    }
+                  </td>
                 }
-              </td>
-            }
-          </tr>
+              </tr>
 
-        </ng-template>
-      </p-table>
-    </div>
+            </ng-template>
+          </p-table>
+        </div>
+      }
+    }
+    @case (TypeContenuDto.ICONE) {
+      <i [class]="contenu2.classe"></i>
+    }
+    @case (TypeContenuDto.LIEN) {
+      <a [href]="contenu2.lien" target="_blank">{{ contenu2.texte }}</a>
+    }
+    @case (TypeContenuDto.COMPOSE) {
+      @if (contenu2.listeContenu) {
+        @for (contenu of contenu2.listeContenu; track $index) {
+          <app-contenu-component [contenu]="contenu"></app-contenu-component>
+        }
+      }
+    }
+    @case (TypeContenuDto.BOUTON) {
+      <button class="btn btn-primary">{{ contenu2.texte }}</button>
     }
 
   }
+  <!--  @if (contenu2.type == TypeContenuDto.TEXTE) {-->
+    <!--    <p>{{ contenu2.texte }}</p>-->
+    <!--  } @else if (contenu2.type == TypeContenuDto.TABLEAU) {-->
+    <!--    -->
+    <!--    }-->
+
+    <!--  } @else if (contenu2.type == TypeContenuDto.ICONE) {-->
+    <!--    <i class="${contenu2.classe}"></i>-->
+    <!--  } @else if (contenu2.type == TypeContenuDto.LIEN) {-->
+    <!--    <a href="{{ contenu2.lien }}" target="_blank">{{ contenu2.texte }}</a>-->
+    <!--  } @else if (contenu2.type == TypeContenuDto.COMPOSE) {-->
+    <!--    @if (contenu2.listeContenu) {-->
+    <!--      @for (contenu of contenu2.listeContenu; track $index) {-->
+    <!--        <app-contenu-component [contenu]="contenu"></app-contenu-component>-->
+    <!--      }-->
+    <!--    }-->
+    <!--  } @else if (contenu2.type == TypeContenuDto.BOUTON) {-->
+    <!--    <button class="btn btn-primary">{{ contenu2.texte }}</button>-->
+    <!--  }-->
 }

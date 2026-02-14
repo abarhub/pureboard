@@ -13,5 +13,5 @@ public class CardProperties {
     private List<ChampsProperties> champs;
     private List<String> repertoire;
     private String script;
-    private Map<String, String> parametres;
+    private Map<String, Object> parametres;
 }

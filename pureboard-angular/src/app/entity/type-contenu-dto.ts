@@ -1,5 +1,9 @@
 export enum TypeContenuDto {
   INCONNU = '',
   TEXTE = 'TEXTE',
-  TABLEAU = 'TABLEAU'
+  TABLEAU = 'TABLEAU',
+  ICONE = "ICONE",
+  COMPOSE = 'COMPOSE',
+  LIEN = 'LIEN',
+  BOUTON = 'BOUTON'
 }

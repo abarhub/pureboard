@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {JsonPipe} from "@angular/common";
 import {TypeContenuDto} from '../../entity/type-contenu-dto';
 import {ContenuDto} from '../../entity/contenu-dto';
@@ -12,6 +12,7 @@ import {TableModule} from 'primeng/table';
   ],
   templateUrl: './contenu-component.html',
   styleUrl: './contenu-component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContenuComponent {
 
