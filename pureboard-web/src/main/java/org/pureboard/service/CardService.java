@@ -46,9 +46,12 @@ public class CardService {
 
     private final SpelExpressionParser parser = new SpelExpressionParser();
 
-    public CardService(AnalysePomService analysePomService, RechercheRepertoireService rechercheRepertoireService) {
+    private final ContexteService contexteService;
+
+    public CardService(AnalysePomService analysePomService, RechercheRepertoireService rechercheRepertoireService, ContexteService contexteService) {
         this.analysePomService = analysePomService;
         this.rechercheRepertoireService = rechercheRepertoireService;
+        this.contexteService = contexteService;
     }
 
     public List<Card> getListCards(CardProperties cardProperties) {
@@ -80,6 +83,7 @@ public class CardService {
             Object groovyObject = groovyClass.getDeclaredConstructor().newInstance();
 
             if (groovyObject instanceof GroovyCards groovyCards) {
+                groovyCards.setContexteService(contexteService);
                 var listeCard = groovyCards.getListCard(cardProperties);
                 LOGGER.info("listeCard: {}", listeCard);
                 if (listeCard != null) {
