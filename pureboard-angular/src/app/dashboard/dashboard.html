@@ -27,7 +27,12 @@
       @for (card of listeCards | keyvalue; track card.key) {
 
         <div class="mb-4 p-4 min-w-72 max-w-72">
-          <p-card [header]="card.value.titre">
+          <p-card>
+            <ng-template #title> {{card.value.titre}}
+              @if (!card.value.nonCalcule) {
+                <button class="btn btn-primary" (click)="rechargeCard(card.value)">!</button>
+              }
+            </ng-template>
             <p class="m-0">
               @if (!card.value.nonCalcule) {
                 @let value = card.value;

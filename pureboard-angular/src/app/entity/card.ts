@@ -5,4 +5,5 @@ export class CardEntity {
   nonCalcule: boolean = true;
   titre: string = '';
   contenu: ContenuDto = new ContenuDto();
+  recharge?: (card: CardEntity) => void;
 }

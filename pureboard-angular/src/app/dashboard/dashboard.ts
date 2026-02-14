@@ -31,6 +31,7 @@ export class Dashboard implements OnInit {
   selectionDashboard!: FormGroup;
   listeCards: Map<string, CardEntity> = new Map();
   chargementCards = signal(false);
+  idDashboard: string = '';
 
   constructor(private dataService: DataService, private fb: FormBuilder) {
   }
@@ -60,32 +61,74 @@ export class Dashboard implements OnInit {
     this.listeCards.clear();
     this.chargementCards.set(true);
     let idDashboard = this.selectionDashboard.value.dashboard;
-    this.dataService.getListCard(idDashboard).subscribe(data => {
-      console.log('liste card', data);
-      for (const card of data) {
-        let cardObj = new CardEntity();
-        cardObj.id = card.id;
-        cardObj.nonCalcule = true;
-        cardObj.titre = card.label;
-        this.listeCards.set(card.id, cardObj);
-      }
-      this.chargementCards.set(false);
-      this.recalculCards(idDashboard);
-    });
-  }
-
-  private recalculCards(idDashboard: string) {
-    for (const card of this.listeCards.values()) {
-      this.dataService.getCard(idDashboard, card.id).subscribe(data => {
-        if (data && data.contenu) {
-          // console.log('card', card.id, data.contenu);
-          card.contenu = data.contenu;
-          // console.log('card2', card);
+    if (idDashboard) {
+      this.idDashboard = idDashboard;
+      this.dataService.getListCard(idDashboard).subscribe(data => {
+        console.log('liste card', data);
+        for (const card of data) {
+          let cardObj = new CardEntity();
+          cardObj.id = card.id;
+          cardObj.nonCalcule = true;
+          cardObj.titre = card.label;
+          this.listeCards.set(card.id, cardObj);
         }
-        card.nonCalcule = false;
+        this.chargementCards.set(false);
+        this.recalculToutesCards();
       });
     }
   }
 
+  private recalculToutesCards() {
+    for (const card of this.listeCards.values()) {
+      this.recalculCards(card);
+    }
+  }
+
+  private recalculCards(card: CardEntity) {
+    // let cardTrouve: CardEntity | null = null;
+    // console.log('recalculCards', idCard);
+    // //console.log('listeCards', this.listeCards);
+    // for (const card of this.listeCards.values()) {
+    //   //console.log('test', card.id, idDashboard, card);
+    //   if (card.id === idCard) {
+    //     cardTrouve = card;
+    //     break;
+    //   }
+    // }
+    // if (cardTrouve) {
+    //   let card = cardTrouve;
+      card.nonCalcule = true;
+      this.dataService.getCard(this.idDashboard, card.id).subscribe({
+        next: data => {
+          if (data && data.contenu) {
+            // console.log('card', card.id, data.contenu);
+            card.contenu = data.contenu;
+            // console.log('card2', card);
+            card.recharge = (x) => {
+              this.recalculCards(x);
+            }
+          }
+        },
+        error: err => {
+          console.error(err);
+        },
+        complete: () => {
+          card.nonCalcule = false;
+        }
+      });
+    // } else {
+    //   console.log('rechargeCard', this.idDashboard, '/', idCard, "non trouve");
+    // }
+  }
+
   protected readonly TypeContenuDto = TypeContenuDto;
+
+  protected rechargeCard(card: CardEntity) {
+    console.log('rechargeCard', card);
+    if (card.recharge) {
+      console.log('rechargeCard', card, "...");
+      card.recharge(card);
+      console.log('rechargeCard', card, "ok");
+    }
+  }
 }
