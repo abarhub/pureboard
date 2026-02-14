@@ -15,7 +15,11 @@
                 @for (cellule of ligne; track $index) {
                   <td>
                     @if (cellule) {
-                      <app-contenu-component [contenu]="cellule" class="no-padding"></app-contenu-component>
+                      @if (cellule.type === TypeContenuDto.TEXTE) {
+                        <p>{{ cellule.texte }}</p>
+                      } @else {
+                        <app-contenu-component [contenu]="cellule" class="no-padding"></app-contenu-component>
+                      }
                     }
                   </td>
                 }
