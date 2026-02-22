@@ -1,12 +1,12 @@
 import $ from 'jquery';
 
 // let urlRacine='http://localhost:8080/api/dashboard';
-let urlRacine='/api/dashboard';
+let urlRacine = '/api/dashboard';
 
 var listeDashboard = [];
 
 async function getData() {
-    const url = urlRacine+"/liste-dashboard";
+    const url = urlRacine + "/liste-dashboard";
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -25,6 +25,20 @@ async function getData() {
         //         text: item.titre
         //     }));
         // });
+        return result;
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+async function getListeCard(idDashboard) {
+    const url = urlRacine + "/liste-card/" + idDashboard;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const result = await response.json();
         return result;
     } catch (error) {
         console.error(error.message);
@@ -184,13 +198,13 @@ function ajouteClickBouton(contenu, config, card) {
     // });
 }
 
-function miseAJourdonnes(card, myId0) {
+function miseAJourdonnes(card, myId0, idDashboard) {
 
     // let myId = card.id;
     const myId = myId0;
     console.log("miseAJourdonnes myId:", myId);
 
-    fetch("/dashboard/item?idDashboard=" + card.dashboard + "&idTraitement=" + card.idTraitement)
+    fetch("/card/" + idDashboard + "/" + myId0)
         .then(response => response.json())
         .then(data => {
             console.log("Résultat reçu :", data);
@@ -255,38 +269,43 @@ function miseAJourdonnes(card, myId0) {
 export function setupJQuery() {
 
 
-$(document).ready(function () {
+    $(document).ready(function () {
 
-    $("#selectDashboard").on("click", function () {
-            //alert("Handler for `click` called.");
+        $("#selectDashboard").on("click", function () {
+                //alert("Handler for `click` called.");
 
-            if (listeDashboard && listeDashboard.length > 0) {
+                if (listeDashboard && listeDashboard.length > 0) {
 
-                let selectedTexte = $("#monSelect option:selected").text();
+                    let selectedTexte = $("#monSelect option:selected").text();
 
-                if (selectedTexte) {
-                    val = $("#monSelect").val();
+                    if (selectedTexte) {
+                        let val = $("#monSelect").val();
 
-                    let dashboardSelectionne = null;
+                        let dashboardSelectionne = null;
 
-                    for (let dashboard of listeDashboard) {
-                        if (dashboard.id == val) {
-                            //console.log(dashboard);
-                            dashboardSelectionne = dashboard;
+                        for (let dashboard of listeDashboard) {
+                            if (dashboard.id === val) {
+                                //console.log(dashboard);
+                                dashboardSelectionne = dashboard;
+                            }
                         }
-                    }
 
-                    if (dashboardSelectionne) {
+                        if (dashboardSelectionne) {
 
-                        if (dashboardSelectionne.listCard) {
 
-                            $("#dashboard").empty();
+                            getListeCard(dashboardSelectionne.id).then(
+                                listeCard => {
+                                    dashboardSelectionne.listCard = listeCard;
 
-                            //for (let card of dashboardSelectionne.listCard) {
-                            dashboardSelectionne.listCard.forEach(card => {
-                                let titre = card.titre;
-                                let myId = card.idTraitement;
-                                let contenu = `
+                                    if (dashboardSelectionne.listCard) {
+
+                                        $("#dashboard").empty();
+
+                                        //for (let card of dashboardSelectionne.listCard) {
+                                        dashboardSelectionne.listCard.forEach(card => {
+                                            let titre = card.label;
+                                            let myId = card.id;
+                                            let contenu = `
 <div class="card" style="width: 18rem; border: 1px; min-width: 18rem" data-id="${myId}">
   <div class="card-body">
     <h5 class="card-title">Card title ${card.titre} <button type="button" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i></button></h5>
@@ -298,70 +317,74 @@ $(document).ready(function () {
   </div>
 </div>
         `
-                                const contenu2 = $(contenu);
-                                let res = $("#dashboard").append(contenu2);
+                                            const contenu2 = $(contenu);
+                                            let res = $("#dashboard").append(contenu2);
 
-                                contenu2.find("h5 button").on("click", () => {
-                                    //alert("Bouton dans le h5 cliqué !");
-                                    console.log("Bouton dans le h5 cliqué !" + myId);
-                                    miseAJourdonnes(card, myId);
-                                });
+                                            contenu2.find("h5 button").on("click", () => {
+                                                //alert("Bouton dans le h5 cliqué !");
+                                                console.log("Bouton dans le h5 cliqué !" + myId);
+                                                miseAJourdonnes(card, myId);
+                                            });
 
-                                // fetch("/dashboard/item?idDashboard=" + card.dashboard + "&idTraitement=" + card.idTraitement)
-                                //     .then(response => response.json())
-                                //     .then(data => {
-                                //         console.log("Résultat reçu :", data);
-                                //         if(data && data instanceof Object){
-                                //             //let res0=$("#dashboard")
-                                //             $(`#dashboard div[data-id="${myId}"] .contenu`).html(data.texte+" :"+myId+"!");
-                                //         }
-                                //     })
-                                //     .catch(error => {
-                                //         console.error("Erreur :", error);
-                                //     });
+                                            // fetch("/dashboard/item?idDashboard=" + card.dashboard + "&idTraitement=" + card.idTraitement)
+                                            //     .then(response => response.json())
+                                            //     .then(data => {
+                                            //         console.log("Résultat reçu :", data);
+                                            //         if(data && data instanceof Object){
+                                            //             //let res0=$("#dashboard")
+                                            //             $(`#dashboard div[data-id="${myId}"] .contenu`).html(data.texte+" :"+myId+"!");
+                                            //         }
+                                            //     })
+                                            //     .catch(error => {
+                                            //         console.error("Erreur :", error);
+                                            //     });
 
-                                // function toto() {
-                                //     let card0=card;
-                                //     let myId0=myId;
-                                //     miseAJourdonnes(card0, myId0);
-                                // }
+                                            // function toto() {
+                                            //     let card0=card;
+                                            //     let myId0=myId;
+                                            //     miseAJourdonnes(card0, myId0);
+                                            // }
 
-                                // toto();
-                                miseAJourdonnes(card, myId);
+                                            // toto();
+                                            miseAJourdonnes(card, myId, dashboardSelectionne.id);
 
 
-                            });
+                                        });
+                                    }
+
+                                }
+                            )
+
+
                         }
-
                     }
+
                 }
 
+
             }
+        )
+        ;
 
+        getData().then(function (x) {
+            console.log("ok");
+            if (x) {
+                listeDashboard = x;
 
-        }
-    )
-    ;
+                console.log(listeDashboard);
+                // 2. Sélection de l'élément avec jQuery
+                const $select = $('#monSelect');
 
-    getData().then(function (x) {
-        console.log("ok");
-        if (x) {
-            listeDashboard = x;
-
-            console.log(listeDashboard);
-            // 2. Sélection de l'élément avec jQuery
-            const $select = $('#monSelect');
-
-            // 3. Boucle sur la liste pour ajouter les options
-            $.each(listeDashboard, function (index, item) {
-                $select.append($('<option>', {
-                    value: item.id,
-                    text: item.titre
-                }));
-            });
-        }
+                // 3. Boucle sur la liste pour ajouter les options
+                $.each(listeDashboard, function (index, item) {
+                    $select.append($('<option>', {
+                        value: item.id,
+                        text: item.titre
+                    }));
+                });
+            }
+        });
     });
-});
 
 
 }
