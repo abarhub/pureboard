@@ -32,6 +32,7 @@
 	</properties>
 	<modules>
 		<module>pureboard-angular</module>
+		<module>pureboard-jquery</module>
 		<module>pureboard-web</module>
 	</modules>
 
