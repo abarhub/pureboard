@@ -1,10 +1,11 @@
 import $ from 'jquery';
 import {DashboardDto} from "./entity/dashboard.ts";
+import type {LabelDto} from "./entity/label-dto.ts";
 
 // let urlRacine='http://localhost:8080/api/dashboard';
 let urlRacine = '/api/dashboard';
 
-var listeDashboard = [];
+let listeDashboard:DashboardDto[] = [];
 
 async function getData():Promise<DashboardDto[]> {
     const url = urlRacine + "/liste-dashboard";
@@ -14,7 +15,7 @@ async function getData():Promise<DashboardDto[]> {
             throw new Error(`Response status: ${response.status}`);
         }
 
-        const result = await response.json();
+        const result:DashboardDto[] = await response.json();
         // console.log(result);
         // // 2. Sélection de l'élément avec jQuery
         // const $select = $('#monSelect');
@@ -27,26 +28,28 @@ async function getData():Promise<DashboardDto[]> {
         //     }));
         // });
         return result;
-    } catch (error) {
+    } catch (error : any) {
         console.error(error.message);
+        return Promise.reject(new Error(`error "${error.message}"`));
     }
 }
 
-async function getListeCard(idDashboard) {
+async function getListeCard(idDashboard:string):Promise<LabelDto[]>  {
     const url = urlRacine + "/liste-card/" + idDashboard;
     try {
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
-        const result = await response.json();
+        const result:LabelDto[] = await response.json();
         return result;
-    } catch (error) {
+    } catch (error:any) {
         console.error(error.message);
+        return Promise.reject(new Error(`error "${error.message}"`));
     }
 }
 
-function construitTableau(data, config) {
+function construitTableau(data:any, config:any):string {
     let contenu = `<table class="table table-striped table-hover">`;
     if (data && data.length > 0) {
         let first = data[0];
@@ -71,7 +74,7 @@ function construitTableau(data, config) {
     return contenu;
 }
 
-function construitObjet(data, config) {
+function construitObjet(data:any, config:any):string {
     let contenu = "";
 
     contenu += `<table class="table table-striped table-hover">`;
@@ -85,7 +88,7 @@ function construitObjet(data, config) {
     return contenu;
 }
 
-function construitContenu(data, config) {
+function construitContenu(data:any, config:any) {
     let contenu = '';
     if (data) {
         if (data instanceof Array) {
@@ -129,7 +132,7 @@ function construitContenu(data, config) {
                     contenu = `<a href="${data.lien}" target="_blank">${data.texte}</a>`;
                 } else if (data.type === "compose") {
                     if (data.liste && data.liste.length > 0) {
-                        data.liste.forEach(element => {
+                        data.liste.forEach((element:any) => {
                             contenu += construitContenu(element, config);
                         });
                     }
@@ -168,8 +171,8 @@ function construitContenu(data, config) {
     return contenu;
 }
 
-function ajouteClickBouton(contenu, config, card) {
-    config.paramBouton.forEach((valeur, cle) => {
+function ajouteClickBouton(contenu:JQuery, config:any, card:any):void {
+    config.paramBouton.forEach((valeur:any, cle:any) => {
         console.log("cle:", cle, "valeur:", valeur);
         let idBouton = cle;
         let methode = (valeur.length > 0) ? valeur[0] : '';
@@ -199,7 +202,7 @@ function ajouteClickBouton(contenu, config, card) {
     // });
 }
 
-function miseAJourdonnes(card, myId0, idDashboard) {
+function miseAJourdonnes(card:LabelDto, myId0:string, idDashboard:string):void {
 
     // let myId = card.id;
     const myId = myId0;
@@ -213,7 +216,7 @@ function miseAJourdonnes(card, myId0, idDashboard) {
             let config = {noBouton: 1, paramBouton: paramBouton};
             const contenu = construitContenu(data, config) || '';
             let contenu2 = $(contenu);
-            $(`#dashboard div[data-id="${myId}"] .contenu`).html(contenu2);
+            $(`#dashboard div[data-id="${myId}"] .contenu`).html(contenu2 as any);
             ajouteClickBouton(contenu2, config, card);
             // if (data) {
             //     if (data instanceof Array) {
@@ -282,7 +285,7 @@ export function setupJQuery() {
                     if (selectedTexte) {
                         let val = $("#monSelect").val();
 
-                        let dashboardSelectionne = null;
+                        let dashboardSelectionne:DashboardDto|null = null;
 
                         for (let dashboard of listeDashboard) {
                             if (dashboard.id === val) {
@@ -304,12 +307,12 @@ export function setupJQuery() {
 
                                         //for (let card of dashboardSelectionne.listCard) {
                                         dashboardSelectionne.listCard.forEach(card => {
-                                            let titre = card.label;
+                                            // let _titre = card.label;
                                             let myId = card.id;
                                             let contenu = `
 <div class="card" style="width: 18rem; border: 1px; min-width: 18rem" data-id="${myId}">
   <div class="card-body">
-    <h5 class="card-title">Card title ${card.titre} <button type="button" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i></button></h5>
+    <h5 class="card-title">Card title ${card.label} <button type="button" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i></button></h5>
 <!--    <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>-->
 <!--    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>-->
 <!--    <a href="#" class="card-link">Card link</a>-->
@@ -319,12 +322,13 @@ export function setupJQuery() {
 </div>
         `
                                             const contenu2 = $(contenu);
-                                            let res = $("#dashboard").append(contenu2);
+                                            // let res =
+                                            $("#dashboard").append(contenu2);
 
                                             contenu2.find("h5 button").on("click", () => {
                                                 //alert("Bouton dans le h5 cliqué !");
                                                 console.log("Bouton dans le h5 cliqué !" + myId);
-                                                miseAJourdonnes(card, myId);
+                                                miseAJourdonnes(card, myId, dashboardSelectionne.id);
                                             });
 
                                             // fetch("/dashboard/item?idDashboard=" + card.dashboard + "&idTraitement=" + card.idTraitement)
@@ -377,7 +381,7 @@ export function setupJQuery() {
                 const $select = $('#monSelect');
 
                 // 3. Boucle sur la liste pour ajouter les options
-                $.each(listeDashboard, function (index, item) {
+                $.each(listeDashboard, function (_index:number, item:DashboardDto) {
                     $select.append($('<option>', {
                         value: item.id,
                         text: item.titre
