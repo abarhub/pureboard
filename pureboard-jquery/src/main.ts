@@ -2,7 +2,7 @@ import './style.css'
 import typescriptLogo from './typescript.svg'
 import viteLogo from '/vite.svg'
 import { setupCounter } from './counter.ts'
-import { setupJQuery } from './dashboard-browser.js'
+import { setupJQuery } from './dashboard-browser.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>

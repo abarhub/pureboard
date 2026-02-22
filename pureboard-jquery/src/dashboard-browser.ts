@@ -1,11 +1,12 @@
 import $ from 'jquery';
+import {DashboardDto} from "./entity/dashboard.ts";
 
 // let urlRacine='http://localhost:8080/api/dashboard';
 let urlRacine = '/api/dashboard';
 
 var listeDashboard = [];
 
-async function getData() {
+async function getData():Promise<DashboardDto[]> {
     const url = urlRacine + "/liste-dashboard";
     try {
         const response = await fetch(url);
