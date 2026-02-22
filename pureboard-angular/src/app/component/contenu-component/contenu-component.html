@@ -8,9 +8,9 @@
       @let tableau = contenu2.tableau;
       @if (tableau && tableau?.lignes?.length) {
         <div class="card">
-          <table class="table table-striped">
+          <table class="table table-striped block md:table">
             @for (ligne of tableau.lignes; track $index) {
-              <tr>
+              <tr classe="bg-gray-100 border border-gray-200 md:border-none block md:table-row">
                 @for (cellule of ligne; track $index) {
                   <td>
                     @if (cellule) {
@@ -56,7 +56,11 @@
     @case (TypeContenuDto.COMPOSE) {
       @if (contenu2.listeContenu) {
         @for (contenu of contenu2.listeContenu; track $index) {
-          <app-contenu-component [contenu]="contenu"></app-contenu-component>
+          @if (contenu.type == TypeContenuDto.TEXTE) {
+            <p>{{ contenu.texte }}</p>
+          } @else {
+            <app-contenu-component [contenu]="contenu"></app-contenu-component>
+          }
         }
       }
     }
