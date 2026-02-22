@@ -1,52 +1,59 @@
 import $ from 'jquery';
 import {DashboardDto} from "./entity/dashboard.ts";
 import type {LabelDto} from "./entity/label-dto.ts";
+import {DataService} from "./service/dataService.ts";
 
 // let urlRacine='http://localhost:8080/api/dashboard';
-let urlRacine = '/api/dashboard';
+// let urlRacine = '/api/dashboard';
 
 let listeDashboard:DashboardDto[] = [];
 
-async function getData():Promise<DashboardDto[]> {
-    const url = urlRacine + "/liste-dashboard";
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
+const dataService=new DataService();
 
-        const result:DashboardDto[] = await response.json();
-        // console.log(result);
-        // // 2. Sélection de l'élément avec jQuery
-        // const $select = $('#monSelect');
-        //
-        // // 3. Boucle sur la liste pour ajouter les options
-        // $.each(result, function (index, item) {
-        //     $select.append($('<option>', {
-        //         value: item.id,
-        //         text: item.titre
-        //     }));
-        // });
-        return result;
-    } catch (error : any) {
-        console.error(error.message);
-        return Promise.reject(new Error(`error "${error.message}"`));
-    }
+async function getData():Promise<DashboardDto[]> {
+
+    return dataService.getItems();
+
+    // const url = urlRacine + "/liste-dashboard";
+    // try {
+    //     const response = await fetch(url);
+    //     if (!response.ok) {
+    //         throw new Error(`Response status: ${response.status}`);
+    //     }
+    //
+    //     const result:DashboardDto[] = await response.json();
+    //     // console.log(result);
+    //     // // 2. Sélection de l'élément avec jQuery
+    //     // const $select = $('#monSelect');
+    //     //
+    //     // // 3. Boucle sur la liste pour ajouter les options
+    //     // $.each(result, function (index, item) {
+    //     //     $select.append($('<option>', {
+    //     //         value: item.id,
+    //     //         text: item.titre
+    //     //     }));
+    //     // });
+    //     return result;
+    // } catch (error : any) {
+    //     console.error(error.message);
+    //     return Promise.reject(new Error(`error "${error.message}"`));
+    // }
 }
 
 async function getListeCard(idDashboard:string):Promise<LabelDto[]>  {
-    const url = urlRacine + "/liste-card/" + idDashboard;
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-        const result:LabelDto[] = await response.json();
-        return result;
-    } catch (error:any) {
-        console.error(error.message);
-        return Promise.reject(new Error(`error "${error.message}"`));
-    }
+    return dataService.getListCard(idDashboard);
+    // const url = urlRacine + "/liste-card/" + idDashboard;
+    // try {
+    //     const response = await fetch(url);
+    //     if (!response.ok) {
+    //         throw new Error(`Response status: ${response.status}`);
+    //     }
+    //     const result:LabelDto[] = await response.json();
+    //     return result;
+    // } catch (error:any) {
+    //     console.error(error.message);
+    //     return Promise.reject(new Error(`error "${error.message}"`));
+    // }
 }
 
 function construitTableau(data:any, config:any):string {
@@ -208,8 +215,9 @@ function miseAJourdonnes(card:LabelDto, myId0:string, idDashboard:string):void {
     const myId = myId0;
     console.log("miseAJourdonnes myId:", myId);
 
-    fetch("/card/" + idDashboard + "/" + myId0)
-        .then(response => response.json())
+    //fetch("/card/" + idDashboard + "/" + myId0)
+    //    .then(response => response.json())
+    dataService.getCard(idDashboard,myId0)
         .then(data => {
             console.log("Résultat reçu :", data);
             let paramBouton = new Map();
