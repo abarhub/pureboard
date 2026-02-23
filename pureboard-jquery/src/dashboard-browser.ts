@@ -2,6 +2,8 @@ import $ from 'jquery';
 import {DashboardDto} from "./entity/dashboard.ts";
 import type {LabelDto} from "./entity/label-dto.ts";
 import {DataService} from "./service/dataService.ts";
+import type {ContenuDto} from "./entity/contenu-dto.ts";
+import {TypeContenuDto} from "./entity/type-contenu-dto.ts";
 
 // let urlRacine='http://localhost:8080/api/dashboard';
 // let urlRacine = '/api/dashboard';
@@ -85,24 +87,24 @@ function construitTableau(data:any, config:any):string {
     return contenu;
 }
 
-function construitObjet(data:any, config:any):string {
-    let contenu = "";
+// function construitObjet(data:ContenuDto, config:any):string {
+//     let contenu = "";
+//
+//     contenu += `<table class="table table-striped table-hover">`;
+//
+//     for (const [cle, valeur] of Object.entries(data)) {
+//         const valeur2 = construitContenu(valeur, config);
+//         contenu += `<tr><th>${cle}</th><td>${valeur2}</td></tr>`;
+//     }
+//
+//     contenu += "</table>";
+//     return contenu;
+// }
 
-    contenu += `<table class="table table-striped table-hover">`;
-
-    for (const [cle, valeur] of Object.entries(data)) {
-        const valeur2 = construitContenu(valeur, config);
-        contenu += `<tr><th>${cle}</th><td>${valeur2}</td></tr>`;
-    }
-
-    contenu += "</table>";
-    return contenu;
-}
-
-function construitContenu(data:any, config:any) {
+function construitContenu(data:ContenuDto, config:any) {
     let contenu = '';
     if (data) {
-        if (data instanceof Array) {
+        /*if (data instanceof Array) {
             // let contenu = '';
             // contenu += `<table class="table table-striped table-hover">`;
             // if (data.length > 0) {
@@ -127,33 +129,33 @@ function construitContenu(data:any, config:any) {
             // console.log("contenu tab:", contenu);
             // $(`#dashboard div[data-id="${myId}"] .contenu`).html(contenu);
             return construitTableau(data, config);
-        } else if (data instanceof Object) {
+        // } else*/ //if (data instanceof Object) {
             //let res0=$("#dashboard")
 
             if (data.type) {
-                if (data.type === "TABLEAU") {
+                if (data.type === TypeContenuDto.TABLEAU) {
                     contenu = construitTableau(data.tableau, config);
-                } else if (data.type === "objet") {
-                    contenu = construitTableau(data.objet, config);
-                } else if (data.type === "TEXTE") {
+                //} else if (data.type === TypeContenuDto.INCONNU) {
+                //    contenu = construitTableau(data.objet, config);
+                } else if (data.type === TypeContenuDto.TEXTE) {
                     contenu = `<p>${data.texte}</p>`;
-                } else if (data.type === "icone") {
-                    contenu = `<i class="${data.classes}"></i>`;
-                } else if (data.type === "lien") {
+                } else if (data.type === TypeContenuDto.ICONE) {
+                    contenu = `<i class="${data.classe}"></i>`;
+                } else if (data.type === TypeContenuDto.LIEN) {
                     contenu = `<a href="${data.lien}" target="_blank">${data.texte}</a>`;
-                } else if (data.type === "compose") {
-                    if (data.liste && data.liste.length > 0) {
-                        data.liste.forEach((element:any) => {
+                } else if (data.type === TypeContenuDto.COMPOSE) {
+                    if (data.listeContenu && data.listeContenu.length > 0) {
+                        data.listeContenu.forEach((element:any) => {
                             contenu += construitContenu(element, config);
                         });
                     }
-                } else if (data.type === "bouton") {
+                } else if (data.type === TypeContenuDto.BOUTON) {
                     let idBouton = config.noBouton;
                     config.noBouton++;
                     contenu = `<button class="btn btn-primary" data-idBouton="${idBouton}">${data.texte}</button>`;
-                    config.paramBouton.set(idBouton, [data.methode, data.parametres]);
+                    config.paramBouton.set(idBouton, [data.nomMethode, data.parametresMethode]);
                 }
-            } else {
+            } /*else {
 
                 // console.log("texte:", data.texte, "myId:", myId);
                 //
@@ -167,16 +169,16 @@ function construitContenu(data:any, config:any) {
                 //
                 // contenu += "</table>";
                 // console.log("contenu:", contenu);
-                contenu = construitObjet(data, config);
-            }
+                // contenu = construitObjet(data, config);
+            }*/
 
             //$(`#dashboard div[data-id="${myId}"] .contenu`).html(contenu);
-        } else if (typeof data === "string") {
-            contenu = `<p>${data}</p>`;
-        } else {
-            contenu = `${data}`;
-            //$(`#dashboard div[data-id="${myId}"] .contenu`).html(contenu);
-        }
+        // // }/* else if (typeof data === "string") {
+        //     contenu = `<p>${data}</p>`;
+        // } else {
+        //     contenu = `${data}`;
+        //     //$(`#dashboard div[data-id="${myId}"] .contenu`).html(contenu);
+        // }*/
     }
 
     return contenu;
