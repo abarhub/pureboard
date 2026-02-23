@@ -125,9 +125,15 @@
 			<version>5.0.4</version>
 		</dependency>
 
+<!--		<dependency>-->
+<!--			<groupId>org.pureboard</groupId>-->
+<!--			<artifactId>pureboard-angular</artifactId>-->
+<!--			<version>${project.version}</version>-->
+<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.pureboard</groupId>
-			<artifactId>pureboard-angular</artifactId>
+			<artifactId>pureboard-jquery</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
