@@ -58,20 +58,24 @@ async function getListeCard(idDashboard:string):Promise<LabelDto[]>  {
 
 function construitTableau(data:any, config:any):string {
     let contenu = `<table class="table table-striped table-hover">`;
-    if (data && data.length > 0) {
-        let first = data[0];
-        let keys = Object.keys(first);
-        console.log("keys:", keys);
-        contenu += `<tr>`;
-        for (const key of keys) {
-            contenu += `<th>${key}</th>`;
-        }
+    if (data && data.lignes &&data.lignes.length > 0) {
+
+
+
+
+        // let first = data[0];
+        // let keys = Object.keys(first);
+        // console.log("keys:", keys);
+        // contenu += `<tr>`;
+        // for (const key of keys) {
+        //     contenu += `<th>${key}</th>`;
+        // }
         contenu += `</tr>`;
-        for (const item of data) {
+        for (const item of data.lignes) {
             contenu += `<tr>`;
             console.log("item:", item);
-            for (const key of keys) {
-                const valeur = construitContenu(item[key], config);
+            for (const item2 of item) {
+                const valeur = construitContenu(item2, config);
                 contenu += `<td>${valeur}</td>`;
             }
             contenu += `</tr>`;
@@ -127,11 +131,11 @@ function construitContenu(data:any, config:any) {
             //let res0=$("#dashboard")
 
             if (data.type) {
-                if (data.type === "tableau") {
+                if (data.type === "TABLEAU") {
                     contenu = construitTableau(data.tableau, config);
                 } else if (data.type === "objet") {
                     contenu = construitTableau(data.objet, config);
-                } else if (data.type === "texte") {
+                } else if (data.type === "TEXTE") {
                     contenu = `<p>${data.texte}</p>`;
                 } else if (data.type === "icone") {
                     contenu = `<i class="${data.classes}"></i>`;
@@ -222,7 +226,7 @@ function miseAJourdonnes(card:LabelDto, myId0:string, idDashboard:string):void {
             console.log("Résultat reçu :", data);
             let paramBouton = new Map();
             let config = {noBouton: 1, paramBouton: paramBouton};
-            const contenu = construitContenu(data, config) || '';
+            const contenu = construitContenu(data.contenu, config) || '';
             let contenu2 = $(contenu);
             $(`#dashboard div[data-id="${myId}"] .contenu`).html(contenu2 as any);
             ajouteClickBouton(contenu2, config, card);
