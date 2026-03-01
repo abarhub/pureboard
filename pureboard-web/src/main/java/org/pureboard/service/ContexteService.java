@@ -9,9 +9,16 @@ public class ContexteService {
 
     private final RechercheRepertoireService rechercheRepertoireService;
 
-    public ContexteService(AnalysePomService analysePomService, RechercheRepertoireService rechercheRepertoireService) {
+    private final BitbucketService bitbucketService;
+
+    private final JiraService jiraService;
+
+
+    public ContexteService(AnalysePomService analysePomService, RechercheRepertoireService rechercheRepertoireService, BitbucketService bitbucketService, JiraService jiraService) {
         this.analysePomService = analysePomService;
         this.rechercheRepertoireService = rechercheRepertoireService;
+        this.bitbucketService = bitbucketService;
+        this.jiraService = jiraService;
     }
 
     public AnalysePomService getAnalysePomService() {
@@ -20,5 +27,13 @@ public class ContexteService {
 
     public RechercheRepertoireService getRechercheRepertoireService() {
         return rechercheRepertoireService;
+    }
+
+    public BitbucketService getBitbucketService() {
+        return bitbucketService;
+    }
+
+    public JiraService getJiraService() {
+        return jiraService;
     }
 }

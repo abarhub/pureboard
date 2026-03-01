@@ -81,15 +81,45 @@ public class CardService {
             switch (cardProperties.getType()) {
                 case "maven":
                     return construitTableauMaven(cardProperties, dashboard);
-//                case "groovy":
-//                    construitListeCardGroovy(listeCards, cardProperties);
-//                    break;
+                case "groovy":
+                    return construitTableauGroovy(dashboard, cardProperties);
                 default:
                     throw new IllegalArgumentException("Unsupported dashboard type: " + cardProperties.getType());
             }
         } else {
             throw new IllegalArgumentException("Dashboard type cannot be null");
         }
+    }
+
+    private TableauDto construitTableauGroovy(Dashboard dashboard, CardProperties cardProperties) {
+
+        String script = cardProperties.getScript();
+        try {
+            GroovyClassLoader loader = new GroovyClassLoader();
+            Class groovyClass = loader.parseClass(new File(script));
+            Object groovyObject = groovyClass.getDeclaredConstructor().newInstance();
+
+            if (groovyObject instanceof GroovyCards groovyCards) {
+                groovyCards.setContexteService(contexteService);
+                var tableau = groovyCards.getTableau(cardProperties);
+                LOGGER.info("tableau: {}", tableau);
+//                if (listeCard != null) {
+//                    listeCard.forEach(x -> {
+//                        x.setObjectGroovy(groovyCards);
+//                        x.setType(TypeCard.GROOVY);
+//                    });
+//                    listeCards.addAll(listeCard);
+//                }
+                return tableau;
+            } else {
+                Method m = groovyClass.getMethod("direBonjour", String.class);
+                String resultat = (String) m.invoke(groovyObject, "Alice");
+                LOGGER.info("resultat groovy: {}", resultat);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Erreur lors de la construction du script Groovy : {}", script, e);
+        }
+        return null;
     }
 
     private TableauDto construitTableauMaven(CardProperties cardProperties, Dashboard dashboard) {
@@ -103,16 +133,6 @@ public class CardService {
                         List<Projet> listeProjets = rechercheRepertoireService.findPomFiles(repertoire, Collections.EMPTY_SET);
                         for (var projet : listeProjets) {
                             if (projet.getFichierPom() != null) {
-//                                Card card = new Card();
-//                                card.setId("card" + counter.getAndIncrement());
-//                                card.setTitre("Projet " + projet.getNom());
-//                                card.setType(TypeCard.MAVEN);
-//                                card.setCardProperties(cardProperties);
-//                                Assert.notNull(projet, "projet null");
-//                                card.setPomMaven(Path.of(projet.getFichierPom()));
-//                                card.setProjet(projet);
-//
-//                                listeCards.add(card);
 
                                 analysePomService.analyseProjet(projet);
 
