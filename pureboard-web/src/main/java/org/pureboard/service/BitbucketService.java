@@ -3,7 +3,9 @@ package org.pureboard.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import jakarta.annotation.PostConstruct;
 import org.pureboard.dto.BitBucketAccesTokenDto;
+import org.pureboard.properties.AppProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -20,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
 
-//@Service
+@Service
 public class BitbucketService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BitbucketService.class);
@@ -36,15 +38,25 @@ public class BitbucketService {
 
     private final RestTemplate restTemplate;
 
-    public BitbucketService(String clientId, String secretKey, String urlAuth, String url) {
-        this.clientId = clientId;
-        this.secretKey = secretKey;
-        this.urlAuth = urlAuth;
-        this.url = url;
+    public BitbucketService(AppProperties appProperties) {
+        var bitbucket = appProperties.getBitbucket();
+        this.clientId = bitbucket.getClientId();
+        this.secretKey = bitbucket.getSecretKey();
+        this.urlAuth = bitbucket.getUrlAuth();
+        this.url = bitbucket.getUrl();
         cacheToken = Caffeine.newBuilder().build();
         restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
+
+//    @PostConstruct
+//    public void init() {
+//        LOGGER.info("BitbucketService init");
+//        //test1();
+//
+//        var res=getPullRequest();
+//        LOGGER.info("res={}",res);
+//    }
 
     public String test1() {
 

@@ -4,6 +4,7 @@ package org.pureboard.service;
 //import org.apache.tomcat.util.codec.binary.Base64;
 
 //import org.projetmanager.projetmanager.properties.AppProperties;
+import jakarta.annotation.PostConstruct;
 import org.pureboard.properties.AppProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,13 @@ public class JiraService {
         this.urlRoot = jira.getUrl();
         this.appProperties = appProperties;
     }
+
+//    @PostConstruct
+//    public void init() {
+//        LOGGER.info("JiraService init");
+//        var s=getLastVisitedIssue();
+//        LOGGER.info("s={}", s);
+//    }
 
     public String getListIssue() {
 
