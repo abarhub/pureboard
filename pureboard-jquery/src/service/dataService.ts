@@ -1,6 +1,7 @@
 import type {DashboardDto} from "../entity/dashboard.ts";
 import type {LabelDto} from "../entity/label-dto.ts";
 import type {CardDto} from "../entity/card-dto.ts";
+import type {TableauDto} from "../entity/tableau-dto.ts";
 
 export class DataService {
 
@@ -22,6 +23,11 @@ export class DataService {
 
     getCard(idDashboard: string, id: string): Promise<CardDto> {
         return fetch(this.apiUrl + "/card/" + idDashboard + "/" + id)
+            .then(response => response.json());
+    }
+
+    getTableau(id: string): Promise<TableauDto> {
+        return fetch(this.apiUrl + "/tableau/" + id)
             .then(response => response.json());
     }
 

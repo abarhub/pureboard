@@ -63,18 +63,29 @@ export class Dashboard implements OnInit {
     let idDashboard = this.selectionDashboard.value.dashboard;
     if (idDashboard) {
       this.idDashboard = idDashboard;
-      this.dataService.getListCard(idDashboard).subscribe(data => {
-        console.log('liste card', data);
-        for (const card of data) {
-          let cardObj = new CardEntity();
-          cardObj.id = card.id;
-          cardObj.nonCalcule = true;
-          cardObj.titre = card.label;
-          this.listeCards.set(card.id, cardObj);
+
+      let tab = this.dashboards.find(x => x.id === idDashboard);
+      if (tab) {
+
+        if (tab.type == 'card') {
+          this.dataService.getListCard(idDashboard).subscribe(data => {
+            console.log('liste card', data);
+            for (const card of data) {
+              let cardObj = new CardEntity();
+              cardObj.id = card.id;
+              cardObj.nonCalcule = true;
+              cardObj.titre = card.label;
+              this.listeCards.set(card.id, cardObj);
+            }
+            this.chargementCards.set(false);
+            this.recalculToutesCards();
+          });
+        } else if (tab.type == 'tableau') {
+          console.log('tableau');
         }
-        this.chargementCards.set(false);
-        this.recalculToutesCards();
-      });
+
+      }
+
     }
   }
 
@@ -97,25 +108,25 @@ export class Dashboard implements OnInit {
     // }
     // if (cardTrouve) {
     //   let card = cardTrouve;
-      card.nonCalcule = true;
-      this.dataService.getCard(this.idDashboard, card.id).subscribe({
-        next: data => {
-          if (data && data.contenu) {
-            // console.log('card', card.id, data.contenu);
-            card.contenu = data.contenu;
-            // console.log('card2', card);
-            card.recharge = (x) => {
-              this.recalculCards(x);
-            }
+    card.nonCalcule = true;
+    this.dataService.getCard(this.idDashboard, card.id).subscribe({
+      next: data => {
+        if (data && data.contenu) {
+          // console.log('card', card.id, data.contenu);
+          card.contenu = data.contenu;
+          // console.log('card2', card);
+          card.recharge = (x) => {
+            this.recalculCards(x);
           }
-        },
-        error: err => {
-          console.error(err);
-        },
-        complete: () => {
-          card.nonCalcule = false;
         }
-      });
+      },
+      error: err => {
+        console.error(err);
+      },
+      complete: () => {
+        card.nonCalcule = false;
+      }
+    });
     // } else {
     //   console.log('rechargeCard', this.idDashboard, '/', idCard, "non trouve");
     // }

@@ -3,6 +3,7 @@ package org.pureboard.controler;
 import org.pureboard.dto.CardDto;
 import org.pureboard.dto.DashboardDto;
 import org.pureboard.dto.LabelDto;
+import org.pureboard.dto.TableauDto;
 import org.pureboard.service.CardService;
 import org.pureboard.service.DashboardService;
 import org.slf4j.Logger;
@@ -46,5 +47,11 @@ public class DashboardControler {
     public CardDto card(@PathVariable String idDashboard, @PathVariable String idCard) throws Exception {
         LOGGER.info("card {}", idCard);
         return dashboardService.getCard(idDashboard, idCard);
+    }
+
+    @GetMapping(path = "/tableau/{idDashboard}", produces = "application/json")
+    public TableauDto tableau(@PathVariable String idDashboard) throws Exception {
+        LOGGER.info("tableau {}", idDashboard);
+        return dashboardService.getTableau(idDashboard);
     }
 }

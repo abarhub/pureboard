@@ -4,6 +4,7 @@ import com.google.common.base.CharMatcher;
 import groovy.lang.GroovyClassLoader;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
 import org.pureboard.dashboard.Card;
 import org.pureboard.dashboard.Dashboard;
 import org.pureboard.dashboard.TypeCard;
@@ -73,6 +74,62 @@ public class CardService {
         }
 
         return listeCards;
+    }
+
+    public TableauDto getTableau(CardProperties cardProperties, Dashboard dashboard) {
+        if (StringUtils.isNotBlank(cardProperties.getType())) {
+            switch (cardProperties.getType()) {
+                case "maven":
+                    return construitTableauMaven(cardProperties, dashboard);
+//                case "groovy":
+//                    construitListeCardGroovy(listeCards, cardProperties);
+//                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported dashboard type: " + cardProperties.getType());
+            }
+        } else {
+            throw new IllegalArgumentException("Dashboard type cannot be null");
+        }
+    }
+
+    private TableauDto construitTableauMaven(CardProperties cardProperties, Dashboard dashboard) {
+        TableauDto res = new TableauDto();
+
+        if (CollectionUtils.isNotEmpty(cardProperties.getRepertoire())) {
+            for (String repertoire0 : cardProperties.getRepertoire()) {
+                Path repertoire = Path.of(repertoire0);
+                if (Files.exists(repertoire)) {
+                    try {
+                        List<Projet> listeProjets = rechercheRepertoireService.findPomFiles(repertoire, Collections.EMPTY_SET);
+                        for (var projet : listeProjets) {
+                            if (projet.getFichierPom() != null) {
+//                                Card card = new Card();
+//                                card.setId("card" + counter.getAndIncrement());
+//                                card.setTitre("Projet " + projet.getNom());
+//                                card.setType(TypeCard.MAVEN);
+//                                card.setCardProperties(cardProperties);
+//                                Assert.notNull(projet, "projet null");
+//                                card.setPomMaven(Path.of(projet.getFichierPom()));
+//                                card.setProjet(projet);
+//
+//                                listeCards.add(card);
+
+                                analysePomService.analyseProjet(projet);
+
+                                List<List<String>> liste = prepareConstruitionTableau(cardProperties, projet);
+
+                                ajouteTableau(res, liste);
+
+                            }
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("Erreur lors de la recherche des projets Maven pour le répertoire {}", repertoire, e);
+                    }
+                }
+            }
+        }
+
+        return res;
     }
 
     private void construitListeCardGroovy(List<Card> listeCards, CardProperties cardProperties) {
@@ -204,20 +261,7 @@ public class CardService {
                         } else {
                             contenu.setType(TypeContenu.TABLEAU);
 
-                            List<List<String>> liste = new ArrayList<>();
-
-                            if (properties != null && CollectionUtils.isNotEmpty(properties.getChamps())) {
-
-
-                                for (ChampsProperties nomChamps : properties.getChamps()) {
-                                    String valeur = evalueExpression(nomChamps.getExpression(), projet);
-                                    String nomChamps2 = nomChamps.getNom();
-                                    if (StringUtils.isBlank(nomChamps2)) {
-                                        nomChamps2 = nomChamps(nomChamps.getExpression());
-                                    }
-                                    liste.add(List.of(nomChamps2, valeur));
-                                }
-                            }
+                            List<List<String>> liste = prepareConstruitionTableau(properties, projet);
 
                             TableauDto tableau = construitTableau(liste);
                             contenu.setTableau(tableau);
@@ -231,7 +275,31 @@ public class CardService {
         }
     }
 
+    private @NonNull List<List<String>> prepareConstruitionTableau(CardProperties properties, Projet projet) {
+        List<List<String>> liste = new ArrayList<>();
+
+        if (properties != null && CollectionUtils.isNotEmpty(properties.getChamps())) {
+
+
+            for (ChampsProperties nomChamps : properties.getChamps()) {
+                String valeur = evalueExpression(nomChamps.getExpression(), projet);
+                String nomChamps2 = nomChamps.getNom();
+                if (StringUtils.isBlank(nomChamps2)) {
+                    nomChamps2 = nomChamps(nomChamps.getExpression());
+                }
+                liste.add(List.of(nomChamps2, valeur));
+            }
+        }
+        return liste;
+    }
+
     private TableauDto construitTableau(List<List<String>> liste) {
+        TableauDto tableau = new TableauDto();
+        ajouteTableau(tableau, liste);
+        return tableau;
+    }
+
+    private void ajouteTableau(TableauDto tableau, List<List<String>> liste) {
         List<List<ContenuDto>> listeContenu = new ArrayList<>();
         if (liste != null) {
             for (List<String> ligne : liste) {
@@ -242,9 +310,11 @@ public class CardService {
                 listeContenu.add(ligneContenu);
             }
         }
-        TableauDto tableau = new TableauDto();
-        tableau.setLignes(listeContenu);
-        return tableau;
+        if (tableau.getLignes() == null) {
+            tableau.setLignes(listeContenu);
+        } else {
+            tableau.getLignes().addAll(listeContenu);
+        }
     }
 
     private ContenuDto construitTexte(String texte) {

@@ -4,6 +4,7 @@ import type {LabelDto} from "./entity/label-dto.ts";
 import {DataService} from "./service/dataService.ts";
 import type {ContenuDto} from "./entity/contenu-dto.ts";
 import {TypeContenuDto} from "./entity/type-contenu-dto.ts";
+import type {TableauDto} from "./entity/tableau-dto.ts";
 
 // let urlRacine='http://localhost:8080/api/dashboard';
 // let urlRacine = '/api/dashboard';
@@ -58,7 +59,7 @@ async function getListeCard(idDashboard:string):Promise<LabelDto[]>  {
     // }
 }
 
-function construitTableau(data:any, config:any):string {
+function construitTableau(data:TableauDto|null, config:any):string {
     let contenu = `<table class="table table-striped table-hover">`;
     if (data && data.lignes &&data.lignes.length > 0) {
 
@@ -101,7 +102,7 @@ function construitTableau(data:any, config:any):string {
 //     return contenu;
 // }
 
-function construitContenu(data:ContenuDto, config:any) {
+function construitContenu(data:ContenuDto, config:any):string {
     let contenu = '';
     if (data) {
         /*if (data instanceof Array) {
@@ -284,6 +285,93 @@ function miseAJourdonnes(card:LabelDto, myId0:string, idDashboard:string):void {
         });
 }
 
+function miseAJourListeCards(dashboardSelectionne:DashboardDto):void {
+    getListeCard(dashboardSelectionne.id).then(
+        listeCard => {
+            dashboardSelectionne.listCard = listeCard;
+
+            if (dashboardSelectionne.listCard) {
+
+                $("#dashboard").empty();
+
+                //for (let card of dashboardSelectionne.listCard) {
+                dashboardSelectionne.listCard.forEach(card => {
+                    // let _titre = card.label;
+                    let myId = card.id;
+                    let contenu = `
+<div class="card" style="width: 18rem; border: 1px; min-width: 18rem" data-id="${myId}">
+  <div class="card-body">
+    <h5 class="card-title">Card title ${card.label} <button type="button" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i></button></h5>
+<!--    <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>-->
+<!--    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>-->
+<!--    <a href="#" class="card-link">Card link</a>-->
+<!--    <a href="#" class="card-link">Another link</a>-->
+    <div class="contenu"></div>
+  </div>
+</div>
+        `
+                    const contenu2 = $(contenu);
+                    // let res =
+                    $("#dashboard").append(contenu2);
+
+                    contenu2.find("h5 button").on("click", () => {
+                        //alert("Bouton dans le h5 cliqué !");
+                        console.log("Bouton dans le h5 cliqué !" + myId);
+                        miseAJourdonnes(card, myId, dashboardSelectionne.id);
+                    });
+
+                    // fetch("/dashboard/item?idDashboard=" + card.dashboard + "&idTraitement=" + card.idTraitement)
+                    //     .then(response => response.json())
+                    //     .then(data => {
+                    //         console.log("Résultat reçu :", data);
+                    //         if(data && data instanceof Object){
+                    //             //let res0=$("#dashboard")
+                    //             $(`#dashboard div[data-id="${myId}"] .contenu`).html(data.texte+" :"+myId+"!");
+                    //         }
+                    //     })
+                    //     .catch(error => {
+                    //         console.error("Erreur :", error);
+                    //     });
+
+                    // function toto() {
+                    //     let card0=card;
+                    //     let myId0=myId;
+                    //     miseAJourdonnes(card0, myId0);
+                    // }
+
+                    // toto();
+                    miseAJourdonnes(card, myId, dashboardSelectionne.id);
+
+
+                });
+            }
+
+        }
+    )
+}
+
+function miseAJourTableau(dashboardSelectionne:DashboardDto):void {
+    dataService.getTableau(dashboardSelectionne.id).then(
+        tableau => {
+            console.log("tableau:", tableau);
+
+            $("#dashboard").empty();
+
+            if(tableau){
+                let paramBouton = new Map();
+                let config = {noBouton: 1, paramBouton: paramBouton};
+
+                let contenu=construitTableau(tableau, config);
+
+                const contenu2 = $(contenu);
+                // let res =
+                $("#dashboard").append(contenu2);
+
+            }
+
+        });
+}
+
 export function setupJQuery() {
 
 
@@ -310,70 +398,12 @@ export function setupJQuery() {
 
                         if (dashboardSelectionne) {
 
+                            if(dashboardSelectionne.type=='CARD') {
 
-                            getListeCard(dashboardSelectionne.id).then(
-                                listeCard => {
-                                    dashboardSelectionne.listCard = listeCard;
-
-                                    if (dashboardSelectionne.listCard) {
-
-                                        $("#dashboard").empty();
-
-                                        //for (let card of dashboardSelectionne.listCard) {
-                                        dashboardSelectionne.listCard.forEach(card => {
-                                            // let _titre = card.label;
-                                            let myId = card.id;
-                                            let contenu = `
-<div class="card" style="width: 18rem; border: 1px; min-width: 18rem" data-id="${myId}">
-  <div class="card-body">
-    <h5 class="card-title">Card title ${card.label} <button type="button" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i></button></h5>
-<!--    <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>-->
-<!--    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>-->
-<!--    <a href="#" class="card-link">Card link</a>-->
-<!--    <a href="#" class="card-link">Another link</a>-->
-    <div class="contenu"></div>
-  </div>
-</div>
-        `
-                                            const contenu2 = $(contenu);
-                                            // let res =
-                                            $("#dashboard").append(contenu2);
-
-                                            contenu2.find("h5 button").on("click", () => {
-                                                //alert("Bouton dans le h5 cliqué !");
-                                                console.log("Bouton dans le h5 cliqué !" + myId);
-                                                miseAJourdonnes(card, myId, dashboardSelectionne.id);
-                                            });
-
-                                            // fetch("/dashboard/item?idDashboard=" + card.dashboard + "&idTraitement=" + card.idTraitement)
-                                            //     .then(response => response.json())
-                                            //     .then(data => {
-                                            //         console.log("Résultat reçu :", data);
-                                            //         if(data && data instanceof Object){
-                                            //             //let res0=$("#dashboard")
-                                            //             $(`#dashboard div[data-id="${myId}"] .contenu`).html(data.texte+" :"+myId+"!");
-                                            //         }
-                                            //     })
-                                            //     .catch(error => {
-                                            //         console.error("Erreur :", error);
-                                            //     });
-
-                                            // function toto() {
-                                            //     let card0=card;
-                                            //     let myId0=myId;
-                                            //     miseAJourdonnes(card0, myId0);
-                                            // }
-
-                                            // toto();
-                                            miseAJourdonnes(card, myId, dashboardSelectionne.id);
-
-
-                                        });
-                                    }
-
-                                }
-                            )
-
+                                miseAJourListeCards(dashboardSelectionne);
+                            } else if(dashboardSelectionne.type=='TABLEAU') {
+                                miseAJourTableau(dashboardSelectionne);
+                            }
 
                         }
                     }

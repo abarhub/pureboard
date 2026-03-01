@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class DashboardDto {
     private String id;
     private String titre;
+    private TypeDashboardDto type;
 
 }

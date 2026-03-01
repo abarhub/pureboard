@@ -1,13 +1,12 @@
 package org.pureboard.service;
 
+import com.google.common.base.Verify;
 import org.apache.commons.collections4.CollectionUtils;
 import org.pureboard.dashboard.Card;
 import org.pureboard.dashboard.Dashboard;
 import org.pureboard.dashboard.ListeDashboard;
 import org.pureboard.dashboard.TypeDashboard;
-import org.pureboard.dto.CardDto;
-import org.pureboard.dto.DashboardDto;
-import org.pureboard.dto.LabelDto;
+import org.pureboard.dto.*;
 import org.pureboard.properties.AppProperties;
 import org.pureboard.properties.DashboardProperties;
 import org.springframework.stereotype.Service;
@@ -46,6 +45,14 @@ public class DashboardService {
                     dashboardDto.setType(TypeDashboard.CARD);
                     //ajouterCard(dashboardDto, dashboard);
                     dashboardDto.setDashboardProperties(dashboard);
+                } else if (Objects.equals(dashboard.getType(), "tableau")) {
+                    dashboardDto.setType(TypeDashboard.TABLEAU);
+                    dashboardDto.setDashboardProperties(dashboard);
+                    Verify.verify(dashboard.getListeCard().size() == 1);
+                    var card = dashboard.getListeCard().get(0);
+                    var card2 = new Card();
+                    card2.setCardProperties(card);
+                    dashboardDto.setCards(List.of(card2));
                 } else {
                     throw new IllegalArgumentException("Type dashboard invalide: " + dashboard.getType());
                 }
@@ -71,6 +78,7 @@ public class DashboardService {
             var dto = new DashboardDto();
             dto.setId(dashboard.getId());
             dto.setTitre(dashboard.getNom());
+            dto.setType(Enum.valueOf(TypeDashboardDto.class, dashboard.getType().name()));
             liste.add(dto);
         }
         return liste;
@@ -106,6 +114,7 @@ public class DashboardService {
 
     public CardDto getCard(String idDashboard, String idCard) {
         var dashboardOpt = listeDashboard.getDashboards().stream()
+                .filter(x -> x.getType() == TypeDashboard.CARD)
                 .filter(x -> Objects.equals(x.getId(), idDashboard))
                 .findAny();
         if (dashboardOpt.isEmpty()) {
@@ -122,6 +131,19 @@ public class DashboardService {
             } else {
                 return null;
             }
+        }
+    }
+
+    public TableauDto getTableau(String idDashboard) {
+        var dashboardOpt = listeDashboard.getDashboards().stream()
+                .filter(x -> x.getType() == TypeDashboard.TABLEAU)
+                .filter(x -> Objects.equals(x.getId(), idDashboard))
+                .findAny();
+        if (dashboardOpt.isEmpty()) {
+            return null;
+        } else {
+            var dashboard = dashboardOpt.get();
+            return cardService.getTableau(dashboard.getCards().getFirst().getCardProperties(), dashboard);
         }
     }
 }
