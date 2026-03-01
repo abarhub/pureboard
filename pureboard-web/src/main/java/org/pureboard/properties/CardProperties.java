@@ -12,6 +12,7 @@ public class CardProperties {
     private String title;
     private List<ChampsProperties> champs;
     private List<String> repertoire;
+    private List<String> repertoireExclus;
     private String script;
     private Map<String, Object> parametres;
 }

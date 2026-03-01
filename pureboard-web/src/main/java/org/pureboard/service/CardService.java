@@ -29,9 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -126,11 +124,15 @@ public class CardService {
         TableauDto res = new TableauDto();
 
         if (CollectionUtils.isNotEmpty(cardProperties.getRepertoire())) {
+            Set<String> repertoireExclus = Collections.EMPTY_SET;
+            if (CollectionUtils.isNotEmpty(cardProperties.getRepertoireExclus())) {
+                repertoireExclus = new HashSet<>(cardProperties.getRepertoireExclus());
+            }
             for (String repertoire0 : cardProperties.getRepertoire()) {
                 Path repertoire = Path.of(repertoire0);
                 if (Files.exists(repertoire)) {
                     try {
-                        List<Projet> listeProjets = rechercheRepertoireService.findPomFiles(repertoire, Collections.EMPTY_SET);
+                        List<Projet> listeProjets = rechercheRepertoireService.findPomFiles(repertoire, repertoireExclus);
                         for (var projet : listeProjets) {
                             if (projet.getFichierPom() != null) {
 
