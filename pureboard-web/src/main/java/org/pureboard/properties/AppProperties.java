@@ -9,5 +9,8 @@ import java.util.List;
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
 
+    private JiraProperties jira;
+    private BitbucketProperties bitbucket;
+
     private List<DashboardProperties> dashboards;
 }
