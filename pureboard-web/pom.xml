@@ -14,6 +14,7 @@
 
 	<properties>
 		<spring-modulith.version>2.0.1</spring-modulith.version>
+		<groovy.version>5.0.4</groovy.version>
 	</properties>
 
 
@@ -122,7 +123,57 @@
 		<dependency>
 			<groupId>org.apache.groovy</groupId>
 			<artifactId>groovy</artifactId>
-			<version>5.0.4</version>
+			<version>${groovy.version}</version>
+		</dependency>
+
+		<!-- Pour JsonSlurper / JsonOutput -->
+		<dependency>
+			<groupId>org.apache.groovy</groupId>
+			<artifactId>groovy-json</artifactId>
+			<version>${groovy.version}</version>
+		</dependency>
+
+
+		<!-- Pour xml -->
+		<dependency>
+			<groupId>org.apache.groovy</groupId>
+			<artifactId>groovy-xml</artifactId>
+			<version>${groovy.version}</version>
+		</dependency>
+
+		<!-- Pour yml -->
+		<dependency>
+			<groupId>org.apache.groovy</groupId>
+			<artifactId>groovy-yaml</artifactId>
+			<version>${groovy.version}</version>
+		</dependency>
+
+		<!-- Pour sql -->
+		<dependency>
+			<groupId>org.apache.groovy</groupId>
+			<artifactId>groovy-sql</artifactId>
+			<version>${groovy.version}</version>
+		</dependency>
+
+		<!-- Pour dateutil -->
+		<dependency>
+			<groupId>org.apache.groovy</groupId>
+			<artifactId>groovy-dateutil</artifactId>
+			<version>${groovy.version}</version>
+		</dependency>
+
+		<!-- Pour datetime -->
+		<dependency>
+			<groupId>org.apache.groovy</groupId>
+			<artifactId>groovy-datetime</artifactId>
+			<version>${groovy.version}</version>
+		</dependency>
+
+		<!-- Pour nio -->
+		<dependency>
+			<groupId>org.apache.groovy</groupId>
+			<artifactId>groovy-nio</artifactId>
+			<version>${groovy.version}</version>
 		</dependency>
 
 <!--		<dependency>-->
