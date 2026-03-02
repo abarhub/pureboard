@@ -57,6 +57,15 @@ public class RechercheRepertoireService {
                         if (Objects.equals(nom, POM_XML)) {
                             projet.setFichierPom(file.toAbsolutePath().toString());
                         }
+                        if (Objects.equals(nom, PACKAGE_JSON)) {
+                            projet.setPackageJson(file.toAbsolutePath().toString());
+                        }
+                        if (Objects.equals(nom, GO_MOD)) {
+                            projet.setGoMod(file.toAbsolutePath().toString());
+                        }
+                        if (Objects.equals(nom, CARGO_TOML)) {
+                            projet.setCargoToml(file.toAbsolutePath().toString());
+                        }
                         try {
                             FileTime dateModif = Files.getLastModifiedTime(dir);
                             if (dateModif != null) {

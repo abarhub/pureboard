@@ -191,18 +191,18 @@ public class CardService {
                     try {
                         List<Projet> listeProjets = rechercheRepertoireService.findPomFiles(repertoire, Collections.EMPTY_SET);
                         for (var projet : listeProjets) {
+                            Card card = new Card();
+                            card.setId("card" + counter.getAndIncrement());
+                            card.setTitre("Projet " + projet.getNom());
+                            card.setType(TypeCard.MAVEN);
+                            card.setCardProperties(cardProperties);
+                            Assert.notNull(projet, "projet null");
                             if (projet.getFichierPom() != null) {
-                                Card card = new Card();
-                                card.setId("card" + counter.getAndIncrement());
-                                card.setTitre("Projet " + projet.getNom());
-                                card.setType(TypeCard.MAVEN);
-                                card.setCardProperties(cardProperties);
-                                Assert.notNull(projet, "projet null");
                                 card.setPomMaven(Path.of(projet.getFichierPom()));
-                                card.setProjet(projet);
-
-                                listeCards.add(card);
                             }
+                            card.setProjet(projet);
+
+                            listeCards.add(card);
                         }
                     } catch (Exception e) {
                         LOGGER.error("Erreur lors de la recherche des projets Maven pour le répertoire {}", repertoire, e);
@@ -210,6 +210,7 @@ public class CardService {
                 }
             }
         }
+
     }
 
     public CardDto getCard(Dashboard dashboard, Card card, String idCard) {
@@ -252,44 +253,42 @@ public class CardService {
                         var pom = projet.getProjetPom();
                         var nom = pom.getNom();
                         var contenu = new ContenuDto();
-                        if (false) {
-                            contenu.setType(TypeContenu.TEXTE);
-                            contenu.setTexte("projet " + nom);
-                        } else if (false) {
-                            contenu.setType(TypeContenu.TABLEAU);
-                            var artifactId = "";
-                            var groupId = "";
-                            var version = "";
-                            if (pom.getArtifact() != null) {
-                                if (StringUtils.isNotBlank(pom.getArtifact().artefactId())) {
-                                    artifactId = pom.getArtifact().artefactId();
-                                }
-                                if (StringUtils.isNotBlank(pom.getArtifact().groupId())) {
-                                    groupId = pom.getArtifact().groupId();
-                                }
-                                if (StringUtils.isNotBlank(pom.getArtifact().version())) {
-                                    version = pom.getArtifact().version();
-                                }
-                            }
-                            if (nom == null) {
-                                nom = "";
-                            }
-                            var tab = List.of(List.of("nom", nom),
-                                    List.of("groupId", groupId),
-                                    List.of("artefactId", artifactId),
-                                    List.of("version", version));
-                            TableauDto tableau = construitTableau(tab);
-                            contenu.setTableau(tableau);
-                        } else {
-                            contenu.setType(TypeContenu.TABLEAU);
+                        contenu.setType(TypeContenu.TABLEAU);
 
-                            List<List<String>> liste = prepareConstruitionTableau(properties, projet);
+                        List<List<String>> liste = prepareConstruitionTableau(properties, projet);
 
-                            TableauDto tableau = construitTableau(liste);
-                            contenu.setTableau(tableau);
-                        }
+                        TableauDto tableau = construitTableau(liste);
+                        contenu.setTableau(tableau);
                         cardDto.setContenu(contenu);
                     }
+                } catch (Exception e) {
+                    LOGGER.error("Erreur lors de l'analyse du projet Maven", e);
+                }
+            }
+        } else if (card.getProjet() != null) {
+            var projet = card.getProjet();
+            if (projet.getPackageJson() != null || projet.getGoMod() != null || projet.getCargoToml() != null) {
+                try {
+//                    var packageJson = projet.getPackageJson();
+//                var nom = packageJson.getNom();
+
+//                    Projet projet = card.getProjet();
+                    if (projet != null) {
+//                        projet = new Projet();
+//                        projet.setFichierPom(p.toString());
+//                        projet.setRepertoire(p.getParent().toString());
+                        analysePomService.analyseProjet(projet);
+                    }
+
+
+                    var contenu = new ContenuDto();
+                    contenu.setType(TypeContenu.TABLEAU);
+
+                    List<List<String>> liste = prepareConstruitionTableau(properties, projet);
+
+                    TableauDto tableau = construitTableau(liste);
+                    contenu.setTableau(tableau);
+                    cardDto.setContenu(contenu);
                 } catch (Exception e) {
                     LOGGER.error("Erreur lors de l'analyse du projet Maven", e);
                 }
