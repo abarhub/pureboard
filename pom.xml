@@ -29,11 +29,24 @@
 	</scm>
 	<properties>
 		<java.version>25</java.version>
+		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
 	</properties>
 	<modules>
 		<module>pureboard-angular</module>
 		<module>pureboard-jquery</module>
 		<module>pureboard-web</module>
 	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>${sonar-maven-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 </project>
