@@ -52,3 +52,4 @@ config/
 
 justfile
 
+/pureboard-jquery/sbom/bom.json

@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:sbom": "cyclonedx-npm --output-format JSON --output-file sbom/bom.json",
+    "build:all": "npm run build && npm run build:sbom",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.33",
     "typescript": "~5.9.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "@cyclonedx/cyclonedx-npm": "^4.2.1"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

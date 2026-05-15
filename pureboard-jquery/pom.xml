@@ -47,7 +47,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run build</arguments>
+                            <arguments>run build:all</arguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -71,9 +71,24 @@
                             <resources>
                                 <resource>
                                     <directory>dist</directory>
-<!--                                    <includes>-->
-<!--                                        <include>foo.txt</include>-->
-<!--                                    </includes>-->
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-sbom</id>
+                        <phase>prepare-package</phase>
+                        <goals><goal>copy-resources</goal></goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.outputDirectory}/META-INF/sbom
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/sbom</directory>
+                                    <includes>
+                                        <include>bom.json</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
