@@ -1,5 +1,6 @@
 package org.pureboard.service;
 
+import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
@@ -54,13 +55,17 @@ public class AnalysePomService {
             projet.setProjetNode(resultat);
         }
 
-//        if (StringUtils.isNotBlank(projet.getGoMod())) {
-//            analyseGoMod(projet.getGoMod(), resultat);
-//        }
+        if (StringUtils.isNotBlank(projet.getGoMod())) {
+            ProjetGo resultat = new ProjetGo();
+            analyseGoMod(Path.of(projet.getGoMod()), resultat);
+            projet.setProjetGo(resultat);
+        }
 
-//        if (StringUtils.isNotBlank(projet.getCargoToml())) {
-//            analyseCargo(projet.getCargoToml(), resultat);
-//        }
+        if (StringUtils.isNotBlank(projet.getCargoToml())) {
+            ProjetRust resultat = new ProjetRust();
+            analyseCargoToml(Path.of(projet.getCargoToml()), resultat);
+            projet.setProjetRust(resultat);
+        }
         Path pathGit = Path.of(projet.getRepertoire()).resolve(".git");
         if (Files.exists(pathGit)) {
             ProjetGit resultat = new ProjetGit();
@@ -166,9 +171,77 @@ public class AnalysePomService {
                             }
                             projetPom2.setProjetNode(resultat2);
                         }
+                        var f4 = f.resolve("go.mod");
+                        if (Files.exists(f4)) {
+                            ProjetGo projetGo = new ProjetGo();
+                            analyseGoMod(f4, projetGo);
+                            projetEnfant.setProjetGo(projetGo);
+                            if (projetPom2 == null) {
+                                projetPom2 = new ProjetPom();
+                                projetPom2.setNom(projetEnfant.getNom());
+                                projetPom2.getProjetPomEnfants().add(projetPom2);
+                            }
+                            projetPom2.setProjetGo(projetGo);
+                        }
+                        var f5 = f.resolve("Cargo.toml");
+                        if (Files.exists(f5)) {
+                            ProjetRust projetRust = new ProjetRust();
+                            analyseCargoToml(f5, projetRust);
+                            projetEnfant.setProjetRust(projetRust);
+                        }
                     }
                 }
 
+            }
+        }
+    }
+
+    private void analyseCargoToml(Path cargo, ProjetRust projetRust) {
+        if (Files.exists(cargo)) {
+            TomlMapper mapper = new TomlMapper();
+            mapper.findAndRegisterModules();
+
+            try (var reader = Files.newBufferedReader(cargo)) {
+                var toml = mapper.readTree(reader);
+                if (toml.has("package")) {
+                    var packageNode = toml.get("package");
+                    if (packageNode.has("name")) {
+                        projetRust.setNom(packageNode.get("name").asText());
+                    }
+                    if (packageNode.has("version")) {
+                        projetRust.setVersion(packageNode.get("version").asText());
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("Erreur lors de l'analyse du projet {}", cargo, e);
+            }
+
+        }
+    }
+
+    private void analyseGoMod(Path fichierMod, ProjetGo projetGo) throws IOException {
+        if (Files.exists(fichierMod)) {
+            try (var reader = Files.newBufferedReader(fichierMod)) {
+
+                try (var stream = reader.lines()) {
+                    var lignes = stream.toList();
+
+                    for (var ligne : lignes) {
+                        if (ligne != null && ligne.startsWith("module")) {
+                            var s = ligne.split(" ");
+                            if (s.length > 1) {
+                                projetGo.setNom(s[1]);
+                            }
+                        }
+                        if (ligne != null && ligne.startsWith("go")) {
+                            var s = ligne.split(" ");
+                            if (s.length > 1) {
+                                projetGo.setVersionGo(s[1]);
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 package org.pureboard.vo;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Set;
 
 public class Projet {
@@ -18,6 +19,9 @@ public class Projet {
     private ProjetNode projetNode;
     private ProjetGit projetGit;
     private LocalDateTime dateModification;
+    private ProjetRust projetRust;
+    private ProjetGo projetGo;
+    private Map<String,String> resume;
 
     public String getId() {
         return id;
@@ -121,5 +125,29 @@ public class Projet {
 
     public void setDateModification(LocalDateTime dateModification) {
         this.dateModification = dateModification;
+    }
+
+    public ProjetRust getProjetRust() {
+        return projetRust;
+    }
+
+    public void setProjetRust(ProjetRust projetRust) {
+        this.projetRust = projetRust;
+    }
+
+    public ProjetGo getProjetGo() {
+        return projetGo;
+    }
+
+    public void setProjetGo(ProjetGo projetGo) {
+        this.projetGo = projetGo;
+    }
+
+    public Map<String, String> getResume() {
+        return resume;
+    }
+
+    public void setResume(Map<String, String> resume) {
+        this.resume = resume;
     }
 }
