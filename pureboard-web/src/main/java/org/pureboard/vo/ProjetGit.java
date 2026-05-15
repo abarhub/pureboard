@@ -1,5 +1,7 @@
 package org.pureboard.vo;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -76,4 +78,10 @@ public class ProjetGit {
     public void setFichiersNonTracke(List<String> fichiersNonTracke) {
         this.fichiersNonTracke = fichiersNonTracke;
     }
+
+    public boolean isNonCommite() {
+        return CollectionUtils.isNotEmpty(fichiersNonCommite) || CollectionUtils.isNotEmpty(fichiersNonTracke);
+    }
+
+
 }
